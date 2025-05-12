@@ -53,7 +53,7 @@ const Register = () => {
 
     const checkInf = () => {
         const emailRegex = /^[a-zA-Z0-9]+@gmail\.com$/;
-        const phoneRegex = /^0\d{9}$/;
+        const phoneRegex = /^0/;
         let setError = {};
         if (!user.name)
             setError.name = "Vui lòng nhập họ và tên";
@@ -75,17 +75,19 @@ const Register = () => {
         }
         if (user.sdt) {
             if (!phoneRegex.test(user.sdt))
-                setError.sdt = "Số điện thoại phải bắt đầu bằng 0 và đủ 10 số";
+                setError.sdt = "Số điện thoại phải bắt đầu bằng 0";
+            else if (user.sdt.length != 10)
+                setError.sdt = "Số điện thoại không đúng định dạng"
         }
         else
             setError.sdt = "Vui lòng nhập số điện thoại";
 
         if (!user.gioiTinh)
             setError.gioiTinh = "Vui lòng chọn giới tính";
-        if (!user.ngaySinh)
-            setError.ngaySinh = "Vui lòng chọn ngày sinh";
+        if (new Date().getFullYear() - user.ngaySinh.getFullYear() < 18)
+            setError.ngaySinh = "Chưa đủ 18 tuổi";
         if (!user.diaChi)
-            setError = "Vui lòng nhập địa chỉ";
+            setError.diaChi = "Vui lòng nhập địa chỉ";
 
 
         if (Object.keys(setError).length > 0) {
@@ -155,7 +157,7 @@ const Register = () => {
                     </View>
                     <View style={MyStyles.kc}>
                         <TextInput label="Địa chỉ" value={user.diaChi} onChangeText={t => setState(t, 'diaChi')} error={!!errors.diaChi} mode="outlined" />
-                        {errors.diaChi && <Text style={{ color: red }}>{errors.diaChi}</Text>}
+                        {errors.diaChi && <Text style={{ color: 'red' }}>{errors.diaChi}</Text>}
                     </View>
                     <Button style={{ backgroundColor: 'red', marginTop: 20 }} onPress={() => checkInf()}>Đăng ký</Button>
                     <View style={[MyStyles.kc]}>

@@ -68,13 +68,6 @@ const Login = () => {
             </View>
 
             <Button style={{ marginTop: 30, backgroundColor: 'red' }} onPress={() => checkAc()}>Đăng nhập</Button>
-
-            <View style={[MyStyles.kc]}>
-                <Text style={{ textAlign: "center", fontSize: 16 }}>Đăng nhập bằng</Text>
-            </View>
-            <View style={[MyStyles.kc]}>
-                <Text style={{ textAlign: "center", fontSize: 16 }} onPress={() => linkDK()}>Đăng ký</Text>
-            </View>
         </View>
     );
 };

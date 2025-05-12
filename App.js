@@ -1,15 +1,23 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';  // Import NavigationContainer
-import { createStackNavigator } from '@react-navigation/stack';   // Import StackNavigator
-import Register from './components/User/Register';  // Đường dẫn đến Register.js
-import Login from './components/User/Login';      // Đường dẫn đến Login.js
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+import Register from './components/User/Register';
+import Login from './components/User/Login';
+import Main from './Main'
+
+
+
+
+
 
 const Stack = createStackNavigator();
 
-export default function App() {
+const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Main">
         <Stack.Screen
           name="Register"
           component={Register}
@@ -20,7 +28,14 @@ export default function App() {
           component={Login}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
+export default App;

@@ -13,4 +13,28 @@ export default StyleSheet.create({
         textAlign: "center",
         fontSize: 30
     },
+    customButton: {
+        top: -15,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }, innerCircle: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: 'tomato',
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 7,
+    }, header: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        flexDirection: "row",
+        zIndex: 10,
+    }, avatar: {
+
+    }, notification: {
+
+    },
 })
