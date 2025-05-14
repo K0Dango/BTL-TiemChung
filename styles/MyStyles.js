@@ -25,16 +25,5 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 7,
-    }, header: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        flexDirection: "row",
-        zIndex: 10,
-    }, avatar: {
-
-    }, notification: {
-
     },
 })

@@ -1,128 +1,101 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import MyStyles from "../../styles/MyStyles";
+import HeaderStyle from "../../styles/HeaderStyle";
+import HomeStyle from "../../styles/HomeStyle";
 import { useState } from "react";
 import { Button, Icon, TextInput } from "react-native-paper";
-import { useNavigation } from '@react-navigation/native';
+import Icon1 from 'react-native-vector-icons/MaterialIcons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { ScrollView } from "react-native-gesture-handler";
+import { createStackNavigator } from "@react-navigation/stack";
+import { Avatar } from 'react-native-paper';
 
 
 
-const Login = () => {
-    const [account, setAC] = useState({
-        email: '',
-        mk: '',
-    });
+const Home = () => {
+
+    const [notifications, setNotifications] = useState(1);
+
+    const [name, setName] = useState("Nguyen Huu")
+
     const navigation = useNavigation();
 
-    const [showPass, setShowPass] = useState(true);
-
-    const [errors, setErrors] = useState({});
-
-    const setState = (value, field) => {
-        setAC({ ...account, [field]: value });
-        setErrors({ ...errors, [field]: '' });
-    };
-
-
-
-    const linkDK = () => {
-        navigation.navigate('Register');
+    const linkLichSu = () => {
+        navigation.navigate("LichSu");
     }
 
-    const succes = () => {
-        alert("Đăng nhập thành công!");
-        navigation.navigate('Main');
-    }
-
-    const checkAc = () => {
-        const emailRegex = /^[a-zA-Z0-9]+@gmail\.com$/;
-        const setError = {};
-        if (account.email) {
-            if (!emailRegex.test(account.email))
-                setError.email = 'Email phải gồm @gmail.com'
-        }
-        else
-            setError.email = 'Vui lòng nhập vào email'
-        if (!account.mk)
-            setError.mk = 'Vui lòng nhập Password'
-
-        if (Object.keys(setError).length > 0)
-            setErrors(setError);
-        else
-            succes();
-
+    const linkLienHe = () => {
+        navigation.navigate("LienHe")
     }
 
     return (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
-            <View style={MyStyles.container}>
-                <Text style={[MyStyles.text_center, { fontSize: 30 }]}>Đăng nhập</Text>
-
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
+        <View style={{ flex: 1 }}>
+            <View style={HomeStyle.header}>
+                <View style={HeaderStyle.userInfo}>
+                    <Avatar.Image
+                        size={50}
+                        source={{ uri: 'https://randomuser.me/api/portraits/men/75.jpg' }}
+                        style={HeaderStyle.avatar}
+                    />
+                    <View>
+                        <Text>Chào mừng</Text>
+                        <Text style={{ fontSize: 19 }}>{name} </Text>
+                    </View>
                 </View>
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
-                </View>            
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
-                </View>            
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
-                </View>            
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
-                </View>            
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
-                </View>            
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
-                </View>            
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
-                </View>            
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
+                <View style={{ alignItems: "center" }}>
+                    <TouchableOpacity style={HeaderStyle.notificationIcon}>
+                        <Icon1 name="notifications" size={30} color="white" />
+                        {notifications > 0 && (
+                            <View style={HeaderStyle.notificationBadge}>
+                                <Text style={HeaderStyle.notificationText}>{notifications}</Text>
+                            </View>
+                        )}
+                    </TouchableOpacity>
                 </View>
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
-                </View>
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'email')} label={'Email'} value={account.email} error={!!errors.email} keyboardType="email-address" mode="outlined" />
-                    {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
-                </View>
-                <View style={MyStyles.kc}>
-                    <TextInput
-                        onChangeText={t => setState(t, 'mk')} label={'Mật khẩu'} value={account.mk} secureTextEntry={showPass} error={!!errors.mk} mode="outlined" right={<TextInput.Icon icon={showPass ? 'eye' : 'eye-off'} onPress={() => setShowPass(prev => !prev)} />} />
-                    {errors.mk && <Text style={{ color: 'red' }}>{errors.mk}</Text>}
-                </View>
-
-                <Button style={{ marginTop: 30, backgroundColor: 'red' }} onPress={() => checkAc()}>Đăng nhập</Button>
             </View>
-        </ScrollView>
+            <ScrollView>
+                <View style={HomeStyle.viewItem}>
+                    <TouchableOpacity style={HomeStyle.Touch}>
+                        <View style={HomeStyle.item}>
+                            <Icon1 name="category" size={60} color="blue" />
+                            <Text style={HomeStyle.textItem}>Danh sách Vacxin</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={HomeStyle.Touch}>
+                        <View style={HomeStyle.item}>
+                            <FontAwesome5 name="syringe" size={60} color="blue" />
+                            <Text style={HomeStyle.textItem}>Vacxin theo tuổi</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={HomeStyle.Touch}>
+                        <View style={HomeStyle.item}>
+                            <Icon1 name="list" size={60} color="blue" />
+                            <Text style={HomeStyle.textItem}>Lịch tiêm</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={HomeStyle.Touch}>
+                        <View style={HomeStyle.item}>
+                            <Icon1 name="file-download" size={60} color="blue" />
+                            <Text style={HomeStyle.textItem}>Tải giấy chứng nhận</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={HomeStyle.Touch} onPress={() => linkLichSu()}>
+                        <View style={HomeStyle.item}>
+                            <Icon1 name="contacts" size={60} color="blue" />
+                            <Text style={HomeStyle.textItem}>Lịch sử tiêm</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={HomeStyle.Touch} onPress={() => linkLienHe()}>
+                        <View style={HomeStyle.item}>
+                            <Icon1 name="contacts" size={60} color="blue" />
+                            <Text style={HomeStyle.textItem}>Liện hệ</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
+        </View>
     );
 };
 
-export default Login;
+export default Home;

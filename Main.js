@@ -4,12 +4,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { View, Text } from "react-native";
 
 
-
-import Home from './components/Home/Home';
-import LichSu from './components/Home/LichSu';
+import StackHome from './StackHome';
 import DangKyTiem from './components/Home/DangKyTiem';
-import LienHe from './components/Home/LienHe';
-import Setting from './components/Home/Setting';
+import ScreenSetting from "./ScreenSetting";
 import { TouchableOpacity } from "react-native";
 import MyStyles from "./styles/MyStyles";
 
@@ -23,19 +20,16 @@ const CustomButton = ({ onPress }) => {
             <View style={MyStyles.innerCircle}>
                 <Icon name="add-circle" color="#fff" size={35} />
             </View>
-            <Text style={{ color: 'white', alignItems: "center", justifyContent: "center", fontSize: 12}}>Đăng ký tiêm</Text>
+            <Text style={{ color: 'white', alignItems: "center", justifyContent: "center", fontSize: 12 }}>Đăng ký tiêm</Text>
         </TouchableOpacity>
     )
 }
 
 const Main = () => {
     return (
-        <Tab.Navigator initialRouteName="Home" screenOptions={{ headerShown: true, tabBarActiveTintColor: '#fff', tabBarInactiveTintColor: '#fff', tabBarStyle: { backgroundColor: 'blue' } }}>
-            <Tab.Screen name="Home" component={Home} options={{
+        <Tab.Navigator initialRouteName="StackHome" screenOptions={{ headerShown: false, tabBarActiveTintColor: '#fff', tabBarInactiveTintColor: '#fff', tabBarStyle: { backgroundColor: 'blue' } }}>
+            <Tab.Screen name="StackHome" component={StackHome} options={{
                 tabBarIcon: ({ color }) => <Icon name="home" color={color} size={28} />
-            }} />
-            <Tab.Screen name="Lịch sử" component={LichSu} options={{
-                tabBarIcon: ({ color }) => <Icon name="history" color={color} size={28} />
             }} />
             <Tab.Screen
                 name="Đăng ký tiêm"
@@ -45,15 +39,8 @@ const Main = () => {
                 }}
             />
             <Tab.Screen
-                name="Liên hệ"
-                component={LienHe}
-                options={{
-                    tabBarIcon: ({ color }) => <Icon name="contacts" color={color} size={28} />,
-                }}
-            />
-            <Tab.Screen
                 name="Setting"
-                component={Setting}
+                component={ScreenSetting}
                 options={{
                     tabBarIcon: ({ color }) => <Icon name="settings" color={color} size={28} />,
                 }}
