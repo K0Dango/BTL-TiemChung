@@ -64,7 +64,11 @@ const Register = () => {
         }
         else
             setError.email = "Vui lòng nhập Email";
-        if (!user.password)
+        if (user.password) {
+            if (user.password.length < 8)
+                setError.password = "Mật khẩu quá yếu"
+        }
+        else
             setError.password = "Vui lòng nhập mật khẩu";
         if (!user.confirm)
             setError.confirm = "Vui lòng xác nhận mật khẩu";
@@ -115,7 +119,8 @@ const Register = () => {
                         {errors.password && <Text style={{ color: 'red' }}>{errors.password}</Text>}
                     </View>
                     <View style={MyStyles.kc}>
-                        <TextInput label='Xác nhận mật khẩu' value={user.confirm} onChangeText={t => setState(t, 'confirm')} secureTextEntry={showPass.confirmPass} error={!!errors.confirm} mode="outlined" right={<TextInput.Icon icon={showPass.confirmPass ? 'eye' : 'eye-off'} onPress={() => setPass('confirmPass')} />} />
+                        <TextInput label='Xác nhận mật khẩu' value={user.confirm} onChangeText={t => setState(t, 'confirm')} secureTextEntry={showPass.confirmPass} error={!!errors.confirm} mode="outlined" right={<TextInput.Icon icon={showPass.confirmPass ? 'eye' : 'eye-off'}
+                            onPress={() => setPass('confirmPass')} />} />
                         {errors.confirm && <Text style={{ color: 'red' }}>{errors.confirm}</Text>}
                     </View>
                     <View style={MyStyles.kc}>

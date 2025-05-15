@@ -1,4 +1,4 @@
-import React, { Children } from "react";
+import React, { Children, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { View, Text } from "react-native";
@@ -26,6 +26,7 @@ const CustomButton = ({ onPress }) => {
 }
 
 const Main = () => {
+
     return (
         <Tab.Navigator initialRouteName="StackHome" screenOptions={{ headerShown: false, tabBarActiveTintColor: '#fff', tabBarInactiveTintColor: '#fff', tabBarStyle: { backgroundColor: 'blue' } }}>
             <Tab.Screen name="StackHome" component={StackHome} options={{

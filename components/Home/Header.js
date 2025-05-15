@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import HeaderStyle from "../../styles/HeaderStyle";
 import { useState } from "react";
 
-const header = () => {
+const Header = () => {
 
     const [notifications, setNotifications] = useState(1);
 
@@ -40,4 +40,4 @@ const header = () => {
     )
 }
 
-export default header;
+export default Header;

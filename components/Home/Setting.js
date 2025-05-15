@@ -7,6 +7,11 @@ import { useNavigation } from '@react-navigation/native';
 import { Avatar } from 'react-native-paper';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import { ScrollView } from "react-native-gesture-handler";
+// import Clipboard from '@react-native-clipboard/clipboard';
+import * as Clipboard from 'expo-clipboard';
+
+
+import { GlobalData } from "../../global";
 
 
 
@@ -16,18 +21,32 @@ const Login = () => {
 
     const [notifications, setNotifications] = useState(1);
 
-    const [name, setName] = useState("Nguyen Huu")
+    const [user, setUser] = useState({
+        name: "",
+        age: ""
+    })
 
-    const [age, setAge] = useState(18);
+    const setHeader = (name, age) => {
+        setUser([name] = "Huu Khang")
+        setUser([age] = "18")
+    }
 
     const navigation = useNavigation();
 
     const linkLogOut = () => {
         navigation.reset({
-            index:0,
-            routes: [{name: "Login"}]
+            index: 0,
+            routes: [{ name: "Login" }]
         })
     }
+
+    const linkRePass = () => {
+        navigation.navigate("RePass");
+    }
+
+    const copyToClipboard = (text) => {
+        Clipboard.setStringAsync(text);
+    };
 
     return (
         <View style={{ height: `${100}%` }}>
@@ -39,8 +58,8 @@ const Login = () => {
                         style={SettingStyle.avatar}
                     />
                     <View style={{ marginLeft: 10 }}>
-                        <Text style={{ fontSize: 22 }}>{name} </Text>
-                        <Text>Tuổi {age}</Text>
+                        <Text style={{ fontSize: 22 }}>{setHeader.name} </Text>
+                        <Text>Tuổi {setHeader.age}</Text>
                     </View>
 
                 </View>
@@ -62,7 +81,7 @@ const Login = () => {
                             <Text style={SettingStyle.textTouch}>Chỉnh sửa thông tin</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={SettingStyle.touch} >
+                    <TouchableOpacity style={SettingStyle.touch} onPress={() => linkRePass()}>
                         <View style={SettingStyle.viewTouch}>
                             <Text style={SettingStyle.textTouch}>Đổi mật khẩu</Text>
                         </View>
@@ -73,28 +92,28 @@ const Login = () => {
                         </View>
                     </TouchableOpacity>
                     <Text style={[{ marginLeft: 5, marginVertical: 7, fontSize: 25 }]}>Thông tin liên hệ</Text>
-                    <TouchableOpacity style={SettingStyle.touch}>
+                    <TouchableOpacity style={SettingStyle.touch} onPress={() => copyToClipboard(GlobalData.sdt1)}>
                         <View style={[SettingStyle.viewTouch, SettingStyle.viewLH]}>
                             <Text style={SettingStyle.textTouch}>Số điện thoại 1</Text>
-                            <Text style={[SettingStyle.textTouch, { color: "blue" }]}>0000000000</Text>
+                            <Text style={[SettingStyle.textTouch, { color: "blue" }]}>{GlobalData.sdt1}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={SettingStyle.touch}>
+                    <TouchableOpacity style={SettingStyle.touch} onPress={() => copyToClipboard(GlobalData.sdt2)}>
                         <View style={[SettingStyle.viewTouch, SettingStyle.viewLH]}>
                             <Text style={SettingStyle.textTouch}>Số điện thoại 2</Text>
-                            <Text style={[SettingStyle.textTouch, { color: "blue" }]}>0000000000</Text>
+                            <Text style={[SettingStyle.textTouch, { color: "blue" }]}>{GlobalData.sdt2}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={SettingStyle.touch}>
+                    <TouchableOpacity style={SettingStyle.touch} onPress={() => copyToClipboard(GlobalData.email1)}>
                         <View style={[SettingStyle.viewTouch, SettingStyle.viewLH]}>
                             <Text style={SettingStyle.textTouch}>Email 1</Text>
-                            <Text style={[SettingStyle.textTouch, { color: "blue" }]}>abc123@gmail.com</Text>
+                            <Text style={[SettingStyle.textTouch, { color: "blue" }]}>{GlobalData.email1}</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={SettingStyle.touch}>
+                    <TouchableOpacity style={SettingStyle.touch} onPress={() => copyToClipboard(GlobalData.email2)}>
                         <View style={[SettingStyle.viewTouch, SettingStyle.viewLH]}>
                             <Text style={SettingStyle.textTouch}>Email 2</Text>
-                            <Text style={[SettingStyle.textTouch, { color: "blue" }]}>abc123@gmail.com</Text>
+                            <Text style={[SettingStyle.textTouch, { color: "blue" }]}>{GlobalData.email2}</Text>
                         </View>
                     </TouchableOpacity>
                     <Text style={[{ marginLeft: 5, marginVertical: 7, fontSize: 25 }]}>Thông tin chính sách</Text>
