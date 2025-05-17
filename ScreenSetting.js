@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator, Header } from '@react-navigation/stack';
 
 import Setting from './components/Home/Setting';
-import RePass from './components/Home/RePass';
+import RePass from './components/Home/SettingScreen/RePass';
 
 const Stack = createStackNavigator();
 

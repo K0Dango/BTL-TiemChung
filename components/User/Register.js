@@ -6,6 +6,9 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { ScrollView } from "react-native-gesture-handler";
+import { Alert } from "react-native";
+import * as ImgPicker from 'expo-image-picker';
+import Apis, { endpoints } from "../../config/Apis";
 
 
 
@@ -14,6 +17,8 @@ import { ScrollView } from "react-native-gesture-handler";
 
 
 const Register = () => {
+
+
     const [user, setUser] = useState({
         name: '',
         email: '',
@@ -24,6 +29,7 @@ const Register = () => {
         ngaySinh: new Date(),
         diaChi: ''
     })
+
 
     const navigation = useNavigation();
 
@@ -46,12 +52,54 @@ const Register = () => {
         setShowPass(prev => ({ ...prev, [field]: !prev[field] }))
     }
 
-    const testRegis = (user) => {
-        alert("Đăng ký thành công!");
-        navigation.navigate('Login');
+    const [avatar, setAvatar] = useState();
+
+    const pickAvatar = async () => {
+        let { status } =
+            await ImgPicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            alert("Permissions denied!");
+        } else {
+            const r = await ImgPicker.launchImageLibraryAsync();
+            if (!r.canceled)
+                setAvatar(r.assets[0]);
+        }
     }
 
-    const checkInf = () => {
+
+    const updload = async () => {
+
+        let form = new FormData();
+        form.append('name', user.name)
+        form.append('email', user.email)
+        form.append('password', user.password)
+        form.append('sdt', user.sdt)
+        form.append('gioiTinh', user.gioiTinh)
+        form.append('ngaySinh', user.ngaySinh.toISOString().split('T')[0]);
+        form.append('diaChi', user.diaChi)
+        if (avatar) {
+            form.append('avatar', {
+                uri: avatar.uri,
+                name: avatar.fileName || 'avatar.jpg',
+                type: avatar.mimeType || 'image/jpeg',
+            });
+        }
+        try {
+            const res = await Apis.post(endpoints['register'], form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+            Alert.alert('Thành công', 'Đăng ký thành công');
+            navigation.navigate('Login');
+        } catch (err) {
+            console.log('Lỗi khác:', err.message);
+            Alert.alert('Lỗi', 'Đăng ký thất bại');
+        }
+    }
+
+
+    const checkInf = async () => {
         const emailRegex = /^[a-zA-Z0-9]+@gmail\.com$/;
         const phoneRegex = /^0/;
         let setError = {};
@@ -60,6 +108,13 @@ const Register = () => {
         if (user.email) {
             if (!emailRegex.test(user.email)) {
                 setError.email = "Email phải là @gmail.com và không chứa ký tự đặc biệt";
+            }
+            else {
+                const exist = await checkEmail();
+                if (exist) {
+                    setError.email = "Email đã được dùng"
+                }
+
             }
         }
         else
@@ -93,13 +148,19 @@ const Register = () => {
         if (!user.diaChi)
             setError.diaChi = "Vui lòng nhập địa chỉ";
 
-
         if (Object.keys(setError).length > 0) {
             setErrors(setError)
         } else {
-            testRegis();
+            updload();
         }
     };
+
+    const checkEmail = async () => {
+        const res = await Apis.get(`api/check-email/?email=${user.email}`);
+        console.log(res.data)
+
+        return res.data.exits;
+    }
 
     return (
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
@@ -108,7 +169,7 @@ const Register = () => {
                 <View style={MyStyles.kc}>
                     <View>
                         <TextInput label='Họ và tên' value={user.name} onChangeText={t => setState(t, 'name')} error={!!errors.name} mode="outlined" />
-                        {errors.name && <Text style={{ Color: 'red' }}>{errors.name}</Text>}
+                        {errors.name && <Text style={{ color: 'red' }}>{errors.name}</Text>}
                     </View>
                     <View style={MyStyles.kc}>
                         <TextInput label='Email' value={user.email} onChangeText={t => setState(t, 'email')} error={!!errors.email} mode="outlined" keyboardType="email-address" />
@@ -164,6 +225,12 @@ const Register = () => {
                         <TextInput label="Địa chỉ" value={user.diaChi} onChangeText={t => setState(t, 'diaChi')} error={!!errors.diaChi} mode="outlined" />
                         {errors.diaChi && <Text style={{ color: 'red' }}>{errors.diaChi}</Text>}
                     </View>
+                    <View style={{ flexDirection: "row" }}>
+                        <TouchableOpacity style={{ padding: 5, borderWidth: 1, marginTop: 5, borderRadius: 5, width: 150, height: 30 }} onPress={() => pickAvatar()}>
+                            <Text>Chọn ảnh đại diện</Text>
+                        </TouchableOpacity>
+                        {avatar ? <Image source={{ uri: avatar.uri }} style={{ width: 100, height: 100 }} /> : ""}
+                    </View>
                     <Button style={{ backgroundColor: 'red', marginTop: 20 }} onPress={() => checkInf()}>Đăng ký</Button>
                     <View style={[MyStyles.kc]}>
                         <Text style={{ textAlign: "center", fontSize: 16 }}>Hoặc đăng ký bằng</Text>
@@ -175,4 +242,4 @@ const Register = () => {
     );
 }
 
-export default Register;
+export default Register; 
