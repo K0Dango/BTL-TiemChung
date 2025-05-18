@@ -52,7 +52,7 @@ const Register = () => {
         setShowPass(prev => ({ ...prev, [field]: !prev[field] }))
     }
 
-    const [avatar, setAvatar] = useState();
+    const [avatar, setAvatar] = useState(Image.resolveAssetSource(require('../../Image/OIP.jpg')));
 
     const pickAvatar = async () => {
         let { status } =
@@ -77,6 +77,7 @@ const Register = () => {
         form.append('gioiTinh', user.gioiTinh)
         form.append('ngaySinh', user.ngaySinh.toISOString().split('T')[0]);
         form.append('diaChi', user.diaChi)
+
         if (avatar) {
             form.append('avatar', {
                 uri: avatar.uri,
@@ -93,6 +94,8 @@ const Register = () => {
             Alert.alert('Thành công', 'Đăng ký thành công');
             navigation.navigate('Login');
         } catch (err) {
+            console.log("Ảnh được chọn:", avatar);
+
             console.log('Lỗi khác:', err.message);
             Alert.alert('Lỗi', 'Đăng ký thất bại');
         }
@@ -110,8 +113,8 @@ const Register = () => {
                 setError.email = "Email phải là @gmail.com và không chứa ký tự đặc biệt";
             }
             else {
-                const exist = await checkEmail();
-                if (exist) {
+                const exit = await checkEmail();
+                if (exit) {
                     setError.email = "Email đã được dùng"
                 }
 
@@ -137,6 +140,11 @@ const Register = () => {
                 setError.sdt = "Số điện thoại phải bắt đầu bằng 0";
             else if (user.sdt.length != 10)
                 setError.sdt = "Số điện thoại không đúng định dạng"
+            else {
+                const exit = await checkSdt();
+                if (exit)
+                    setError.sdt = "Số điện thoại đã được đăng ký"
+            }
         }
         else
             setError.sdt = "Vui lòng nhập số điện thoại";
@@ -147,7 +155,6 @@ const Register = () => {
             setError.ngaySinh = "Chưa đủ 18 tuổi";
         if (!user.diaChi)
             setError.diaChi = "Vui lòng nhập địa chỉ";
-
         if (Object.keys(setError).length > 0) {
             setErrors(setError)
         } else {
@@ -157,9 +164,13 @@ const Register = () => {
 
     const checkEmail = async () => {
         const res = await Apis.get(`api/check-email/?email=${user.email}`);
-        console.log(res.data)
-
         return res.data.exits;
+    }
+
+    const checkSdt = async () => {
+        const res = await Apis.get(`api/check-sdt/?sdt=${user.sdt}`)
+        console.log(res.data)
+        return res.data.exits
     }
 
     return (
@@ -225,11 +236,11 @@ const Register = () => {
                         <TextInput label="Địa chỉ" value={user.diaChi} onChangeText={t => setState(t, 'diaChi')} error={!!errors.diaChi} mode="outlined" />
                         {errors.diaChi && <Text style={{ color: 'red' }}>{errors.diaChi}</Text>}
                     </View>
-                    <View style={{ flexDirection: "row" }}>
+                    <View style={{alignItems:"center", marginTop:10 }}>
+                        {avatar ? <Image source={{ uri: avatar.uri }} style={{ width: 100, height: 100, borderWidth:0.5, marginBottom:5 }}/> : ""}
                         <TouchableOpacity style={{ padding: 5, borderWidth: 1, marginTop: 5, borderRadius: 5, width: 150, height: 30 }} onPress={() => pickAvatar()}>
                             <Text>Chọn ảnh đại diện</Text>
                         </TouchableOpacity>
-                        {avatar ? <Image source={{ uri: avatar.uri }} style={{ width: 100, height: 100 }} /> : ""}
                     </View>
                     <Button style={{ backgroundColor: 'red', marginTop: 20 }} onPress={() => checkInf()}>Đăng ký</Button>
                     <View style={[MyStyles.kc]}>

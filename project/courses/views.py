@@ -6,11 +6,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
 
-class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPIView):
+class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()  
     serializer_class = UserSerializer
-    # parser_classes = [MultiPartParser, ]
-    # permission_classes = [permissions.AllowAny]
+    parser_classes = [MultiPartParser, ]
+
+    permission_classes = [permissions.AllowAny]
 
     # def get_permissions(self):
     #     if self.action == 'retrieve':
@@ -21,4 +22,11 @@ class UserViewSet(viewsets.ViewSet, generics.CreateAPIView, generics.RetrieveAPI
 def check_email(request):
     email  = request.query_params.get('email')
     exits = User.objects.filter(email=email).exists()
+    return Response({'exits':exits})
+
+
+@api_view(['GET'])
+def check_sdt(request):
+    sdt  = request.query_params.get('sdt')
+    exits = User.objects.filter(sdt=sdt).exists()
     return Response({'exits':exits})

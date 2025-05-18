@@ -34,7 +34,6 @@ class User(models.Model):
         if not self.password.startswith('pbkdf2_'):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
-        import cloudinary
 
 
 

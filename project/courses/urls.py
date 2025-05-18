@@ -7,4 +7,5 @@ router.register('user', views.UserViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
     path('api/check-email/', views.check_email),
+    path('api/check-sdt/', views.check_sdt),
 ]  
