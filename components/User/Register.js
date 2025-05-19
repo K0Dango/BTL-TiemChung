@@ -1,6 +1,6 @@
 import { Button, Text, TextInput, RadioButton } from "react-native-paper";
 import MyStyles from "../../styles/MyStyles";
-import { Image, View, TouchableOpacity } from "react-native";
+import { Image, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useState } from "react";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { useNavigation } from '@react-navigation/native';
@@ -18,6 +18,7 @@ import Apis, { endpoints } from "../../config/Apis";
 
 const Register = () => {
 
+    const [loading, setLoading] = useState(false);
 
     const [user, setUser] = useState({
         name: '',
@@ -51,8 +52,9 @@ const Register = () => {
     const setPass = (field) => {
         setShowPass(prev => ({ ...prev, [field]: !prev[field] }))
     }
+    const DEFAULT_AVATAR = "https://res.cloudinary.com/dcjnoorcg/image/upload/v1747573415/OIP_tcdadj.jpg";
 
-    const [avatar, setAvatar] = useState(Image.resolveAssetSource(require('../../Image/OIP.jpg')));
+    const [avatar, setAvatar] = useState({ uri: DEFAULT_AVATAR });
 
     const pickAvatar = async () => {
         let { status } =
@@ -70,7 +72,7 @@ const Register = () => {
     const updload = async () => {
 
         let form = new FormData();
-        form.append('name', user.name)
+        form.append('username', user.name)
         form.append('email', user.email)
         form.append('password', user.password)
         form.append('sdt', user.sdt)
@@ -84,8 +86,17 @@ const Register = () => {
                 name: avatar.fileName || 'avatar.jpg',
                 type: avatar.mimeType || 'image/jpeg',
             });
+        } else {
+            form.append('avatar', DEFAULT_AVATAR);
+            form.append('avatar', {
+                uri: avatar.uri,
+                name: avatar.fileName || 'avatar.jpg',
+                type: avatar.mimeType || 'image/jpeg',
+            });
         }
+
         try {
+            setLoading(true);
             const res = await Apis.post(endpoints['register'], form, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -98,6 +109,9 @@ const Register = () => {
 
             console.log('Lỗi khác:', err.message);
             Alert.alert('Lỗi', 'Đăng ký thất bại');
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -155,6 +169,8 @@ const Register = () => {
             setError.ngaySinh = "Chưa đủ 18 tuổi";
         if (!user.diaChi)
             setError.diaChi = "Vui lòng nhập địa chỉ";
+        console.log("Bấm")
+        console.log("Ảnh được chọn:", user.avatar);
         if (Object.keys(setError).length > 0) {
             setErrors(setError)
         } else {
@@ -169,13 +185,24 @@ const Register = () => {
 
     const checkSdt = async () => {
         const res = await Apis.get(`api/check-sdt/?sdt=${user.sdt}`)
-        console.log(res.data)
         return res.data.exits
     }
 
     return (
+
         <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
             <View style={MyStyles.container}>
+                {loading && (
+                    <View style={{
+                        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                        backgroundColor: 'rgba(0,0,0,0.3)',
+                        justifyContent: 'center', alignItems: 'center',
+                        zIndex: 10
+                    }}>
+                        <ActivityIndicator size="large" color="#fff" />
+                        <Text style={{ color: "#fff", marginTop: 10 }}>Đang xử lý...</Text>
+                    </View>
+                )}
                 <Text style={[MyStyles.text_center, { backgroundColor: 'brown' }]}>ĐĂNG KÝ TÀI KHOẢN</Text>
                 <View style={MyStyles.kc}>
                     <View>
@@ -183,15 +210,15 @@ const Register = () => {
                         {errors.name && <Text style={{ color: 'red' }}>{errors.name}</Text>}
                     </View>
                     <View style={MyStyles.kc}>
-                        <TextInput label='Email' value={user.email} onChangeText={t => setState(t, 'email')} error={!!errors.email} mode="outlined" keyboardType="email-address" />
+                        <TextInput label='Email' value={user.email} onChangeText={t => setState(t, 'email')} error={!!errors.email} autoCapitalize="none" mode="outlined" keyboardType="email-address" />
                         {errors.email && <Text style={{ color: 'red' }}>{errors.email}</Text>}
                     </View>
                     <View style={MyStyles.kc}>
-                        <TextInput label='Mật khẩu' value={user.password} onChangeText={t => setState(t, 'password')} secureTextEntry={showPass.pass} error={!!errors.password} mode="outlined" right={<TextInput.Icon icon={showPass.pass ? 'eye' : 'eye-off'} onPress={() => setPass('pass')} />} />
+                        <TextInput label='Mật khẩu' value={user.password} onChangeText={t => setState(t, 'password')} secureTextEntry={showPass.pass} error={!!errors.password} autoCapitalize="none" mode="outlined" right={<TextInput.Icon icon={showPass.pass ? 'eye' : 'eye-off'} onPress={() => setPass('pass')} />} />
                         {errors.password && <Text style={{ color: 'red' }}>{errors.password}</Text>}
                     </View>
                     <View style={MyStyles.kc}>
-                        <TextInput label='Xác nhận mật khẩu' value={user.confirm} onChangeText={t => setState(t, 'confirm')} secureTextEntry={showPass.confirmPass} error={!!errors.confirm} mode="outlined" right={<TextInput.Icon icon={showPass.confirmPass ? 'eye' : 'eye-off'}
+                        <TextInput label='Xác nhận mật khẩu' value={user.confirm} onChangeText={t => setState(t, 'confirm')} secureTextEntry={showPass.confirmPass} error={!!errors.confirm} autoCapitalize="none" mode="outlined" right={<TextInput.Icon icon={showPass.confirmPass ? 'eye' : 'eye-off'}
                             onPress={() => setPass('confirmPass')} />} />
                         {errors.confirm && <Text style={{ color: 'red' }}>{errors.confirm}</Text>}
                     </View>
@@ -236,13 +263,14 @@ const Register = () => {
                         <TextInput label="Địa chỉ" value={user.diaChi} onChangeText={t => setState(t, 'diaChi')} error={!!errors.diaChi} mode="outlined" />
                         {errors.diaChi && <Text style={{ color: 'red' }}>{errors.diaChi}</Text>}
                     </View>
-                    <View style={{alignItems:"center", marginTop:10 }}>
-                        {avatar ? <Image source={{ uri: avatar.uri }} style={{ width: 100, height: 100, borderWidth:0.5, marginBottom:5 }}/> : ""}
+                    <View style={{ alignItems: "center", marginTop: 10 }}>
+                        {avatar ? <Image source={{ uri: avatar.uri }} style={{ width: 100, height: 100, borderWidth: 0.5, marginBottom: 5 }} /> : ""}
                         <TouchableOpacity style={{ padding: 5, borderWidth: 1, marginTop: 5, borderRadius: 5, width: 150, height: 30 }} onPress={() => pickAvatar()}>
                             <Text>Chọn ảnh đại diện</Text>
                         </TouchableOpacity>
                     </View>
-                    <Button style={{ backgroundColor: 'red', marginTop: 20 }} onPress={() => checkInf()}>Đăng ký</Button>
+                    <Button style={{ backgroundColor: 'red', marginTop: 20 }} disabled={loading} loading={loading} onPress={() => checkInf()}>Đăng ký
+                    </Button>
                     <View style={[MyStyles.kc]}>
                         <Text style={{ textAlign: "center", fontSize: 16 }}>Hoặc đăng ký bằng</Text>
                     </View>

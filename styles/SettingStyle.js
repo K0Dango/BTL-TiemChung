@@ -5,6 +5,12 @@ export default StyleSheet.create({
     header: {
         ...Header.header,
         height: `${20}%`,
+    }, avata: {
+        ...Header.avatar,
+        width: 120,
+        height: 120,
+        borderRadius:70,
+        padding:10,
     },
     touch: {
         marginHorizontal: 4,

@@ -1,6 +1,7 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 import cloudinary
 
 cloudinary.config( 
@@ -8,7 +9,10 @@ cloudinary.config(
     api_key = '321831298548949', 
     api_secret = '_I5S01hI_lJDPAu5RTudCfW7Lh4')
 
-class User(models.Model):
+
+
+
+class User(AbstractUser):
     GENDER_CHOICES = [
         ('NAM', 'NAM'),
         ('NỮ', 'NỮ'),
@@ -16,21 +20,42 @@ class User(models.Model):
     ]
 
     ROLE_CHOICES = [
-        ('1', 'admin'),
-        ('2', 'user'),
+        ('1', 'Superuser'),
+        ('2', 'Admin'),
+        ('3', 'User'),
     ]
-    name = models.CharField(max_length=50)
-    email = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
+    # name = models.CharField(max_length=50)
+    # email = models.CharField(max_length=100)
+    # password = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
     sdt = models.CharField(max_length=10,null=True, blank=True)
     gioiTinh = models.CharField(max_length=5,  choices=GENDER_CHOICES, default="NAM")
     ngaySinh = models.DateField(blank=True, null=True)
     diaChi = models.TextField( null=True, blank=True)   
     avatar = CloudinaryField('avatar', blank=True, null=True)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='2')
-    created_at = models.DateTimeField(auto_now_add=True)
+    first_name = None
+    last_name = None
+    role = models.CharField(max_length=1, choices=ROLE_CHOICES, default='3')
+    # created_at = models.DateTimeField(auto_now_add=True)
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']  # nếu bạn vẫn dùng username
 
+
+    # def save(self, *args, **kwargs):
+    #     if not self.password.startswith('pbkdf2_'):
+    #         self.password = make_password(self.password)
+    #     super().save(*args, **kwargs)
     def save(self, *args, **kwargs):
+        if self.role == '1':
+            self.is_superuser = True
+            self.is_staff = True
+        elif self.role == '2':
+            self.is_staff = True
+            self.is_superuser = False
+        else:
+            self.is_staff = False
+            self.is_superuser = False
+
         if not self.password.startswith('pbkdf2_'):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
@@ -38,5 +63,6 @@ class User(models.Model):
 
 
     def __str__(self):
-        return f"{self.email} ({'admin' if self.role == '1' else 'user'})"
-# Create your models here.
+        role_name = dict(self.ROLE_CHOICES).get(self.role, 'User')
+        return f"{self.email} ({role_name})"
+

@@ -45,9 +45,11 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'rest_framework',
     'corsheaders',
+    'oauth2_provider',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,8 +57,29 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'oauth2_provider.backends.OAuth2Backend',
+)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+                'rest_framework.authentication.TokenAuthentication',
+
+    ),
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 5,
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ]
+}
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -79,8 +102,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
+AUTH_USER_MODEL = 'courses.User'
 
-CLOUDINARY_STORAGE = {
+
+import cloudinary
+
+CLOUDINARY_STORAGE ={
     'CLOUD_NAME': 'dcjnoorcg',
     'API_KEY': '321831298548949',
     'API_SECRET': '_I5S01hI_lJDPAu5RTudCfW7Lh4',

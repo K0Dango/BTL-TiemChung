@@ -1,20 +1,36 @@
 import React, { useState } from "react";
 import { Avatar, Button, TextInput } from 'react-native-paper';
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import HeaderStyle from "../../../styles/HeaderStyle";
 import { useNavigation } from '@react-navigation/native';
+import { useEffect } from "react";
+import { loadUser } from "../../../global";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 
 
+
+
+const BASE_URL = 'http://192.168.1.13:8000';
 
 const RePass = () => {
 
     const navigation = useNavigation();
-    const [user, setUser] = useState({
-        name: "Nguyen Huu",
-        sdt: "0000000",
-        pass: ""
-    });
+
+    const [loading, setLoading] = useState(false);
+
+    const [user, setUserData] = useState({});
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userData = await loadUser();
+            if (userData) {
+                setUserData(userData);
+            }
+        };
+        fetchUser();
+    }, []);
 
 
     const [errors, setError] = useState({});
@@ -40,19 +56,100 @@ const RePass = () => {
 
     const [page, setPage] = useState(false);
 
-    const checkPass = () => {
+    const checkOldPassword = async (password) => {
+        console.log("1")
+        console.log(password)
+
+        const token = await AsyncStorage.getItem('token');
+        console.log(`Bearer ${token}`)
+
+        try {
+            setLoading(true)
+            const res = await axios.post(`${BASE_URL}/api/user/check-pass/`,
+                { old_pass: password },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                        ,
+                        Authorization: `Bearer ${token}`,
+
+                    },
+                }
+            );
+            console.log(res.data)
+
+            if (res.data.valid) {
+                return true
+            }
+        } catch (error) {
+            // if (error.response) {
+            //     console.error("Lỗi từ server:", error.response.data);
+            //     console.error("Mã lỗi:", error.response.status);
+            //     alert("Lỗi từ server: " + JSON.stringify(error.response.data));
+            // } else if (error.request) {
+            //     console.error("Không nhận được phản hồi từ server:", error.request);
+            //     alert("Không thể kết nối đến máy chủ.");
+            // } else {
+            //     console.error("Lỗi khác:", error.message);
+            //     alert("Lỗi kiểm tra: " + error.message);
+            // }
+            return false;
+        }
+        finally {
+            setLoading(false)
+        }
+    };
+
+    const changePassword = async (newPassword) => {
+        const token = await AsyncStorage.getItem('token');
+        try {
+            setLoading(true)
+            const response = await axios.post(
+                `${BASE_URL}/api/user/change-password/`,
+                {
+                    new_password: newPassword,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log(response.data);
+            alert("Đổi mật khẩu thành công!");
+        } catch (error) {
+            console.error("Lỗi đổi mật khẩu:", error.response?.data);
+            alert(error.response?.data.detail || "Có lỗi xảy ra.");
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+
+    const checkPass = async () => {
         if (!page) {
             if (pass.oldPass) {
-                alert(pass.oldPass);
-                setPage(true)
+                console.log("ddd", pass.oldPass)
+                const kq = await checkOldPassword(pass.oldPass)
+                if (kq) setPage(true);
+                else {
+                    setError({ ...errors, ["oldPass"]: "Mật khẩu không đúng" })
+                }
             }
             else
                 setError({ ...errors, ["oldPass"]: "Vui lòng nhập mật khẩu" })
         }
         else {
             if (pass.newPass) {
-                alert("Cập nhật thành công");
-                navigation.navigate("Setting")
+                console.log("ddd", pass.newPass)
+                if (pass.newPass.length < 8)
+                    setError({ ...errors, ["newPass"]: "Mật khẩu quá yếu" })
+                else {
+                    changePassword(pass.newPass)
+                    navigation.navigate("Setting")
+                }
+
             }
             else
                 setError({ ...errors, ["newPass"]: "Vui lòng nhập mật khẩu" })
@@ -60,36 +157,32 @@ const RePass = () => {
     }
 
 
-
+    console.log({ uri: user.avatar })
     return (
 
         <View>
-            <View style={HeaderStyle.header}>
+            <View style={[HeaderStyle.header, { justifyContent: "flex-start" }]}>
                 <View>
-                    <Avatar.Image
-                        size={50}
-                        source={{ uri: 'https://randomuser.me/api/portraits/men/75.jpg' }}
-                        style={HeaderStyle.avatar}
-                    />
-                    <View>
-                        <Text>
-                            {user.name}
-                        </Text>
-                        <Text>
-                            {user.sdt}
-                        </Text>
-                    </View>
+                    {user.avatar ? <Image source={{ uri: user.avatar }} style={HeaderStyle.avatar} /> : ""}
+                </View>
+                <View>
+                    <Text>
+                        {user.name}
+                    </Text>
+                    <Text>
+                        {user.sdt}
+                    </Text>
                 </View>
             </View>
             {!page && (
                 <View>
                     <View>
                         <TextInput label="Mật khẩu cũ" value={pass.oldPass} placeholder="Mật khẩu cũ" secureTextEntry={showPass.oldPass}
-                            onChangeText={value => setPassword(value, 'oldPass')} mode="outlined" error={!!errors.oldPass} right={<TextInput.Icon icon={showPass.oldPass ? 'eye' : 'eye-off'} onPress={() => state("oldPass")} />} />
+                            onChangeText={value => setPassword(value, 'oldPass')} autoCapitalize="none" mode="outlined" error={!!errors.oldPass} right={<TextInput.Icon icon={showPass.oldPass ? 'eye' : 'eye-off'} onPress={() => state("oldPass")} />} />
                         {errors.oldPass && <Text style={{ color: "red" }}>{errors.oldPass}</Text>}
                     </View>
                     <View>
-                        <Button style={{ backgroundColor: "blue", marginTop: 10, color: "#fff" }} onPress={() => checkPass()}>Xác nhận</Button>
+                        <Button style={{ backgroundColor: "blue", marginTop: 10, color: "#fff" }} disabled={loading} loading={loading} onPress={() => checkPass()}>Xác nhận</Button>
                     </View>
                 </View>
             )}
@@ -97,11 +190,11 @@ const RePass = () => {
                 <View>
                     <View>
                         <TextInput label="Mật khẩu mới" value={pass.newPass} placeholder="Mật khẩu mới" secureTextEntry={showPass.newPass}
-                            onChangeText={value => setPassword(value, 'newPass')} mode="outlined" error={!!errors.newPass} right={<TextInput.Icon icon={showPass.newPass ? 'eye' : 'eye-off'} onPress={() => state("newPass")} />} />
+                            onChangeText={value => setPassword(value, 'newPass')} autoCapitalize="none" mode="outlined" error={!!errors.newPass} right={<TextInput.Icon icon={showPass.newPass ? 'eye' : 'eye-off'} onPress={() => state("newPass")} />} />
                         {errors.newPass && <Text style={{ color: "red" }}>{errors.newPass}</Text>}
                     </View>
                     <View>
-                        <Button style={{ backgroundColor: "blue", marginTop: 10, color: "#fff" }} onPress={() => checkPass()}>Đổi mật khẩu</Button>
+                        <Button style={{ backgroundColor: "blue", marginTop: 10, color: "#fff" }} disabled={loading} loading={loading} onPress={() => checkPass()}>Đổi mật khẩu</Button>
 
                     </View>
                 </View>

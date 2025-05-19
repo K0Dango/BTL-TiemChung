@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import SettingStyle from "../../styles/SettingStyle";
 import HeaderStyle from "../../styles/HeaderStyle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Icon, TextInput } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import { Avatar } from 'react-native-paper';
@@ -9,7 +9,8 @@ import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import { ScrollView } from "react-native-gesture-handler";
 // import Clipboard from '@react-native-clipboard/clipboard';
 import * as Clipboard from 'expo-clipboard';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loadUser } from "../../global";
 
 import { GlobalData } from "../../global";
 
@@ -21,17 +22,20 @@ const Login = () => {
 
     const [notifications, setNotifications] = useState(1);
 
-    const [user, setUser] = useState({
-        name: "",
-        age: ""
-    })
-
-    const setHeader = (name, age) => {
-        setUser([name] = "Huu Khang")
-        setUser([age] = "18")
-    }
 
     const navigation = useNavigation();
+
+    const [user, setUserData] = useState({});
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userData = await loadUser();
+            if (userData) {
+                setUserData(userData);
+            }
+        };
+        fetchUser();
+    }, []);
 
     const linkLogOut = () => {
         navigation.reset({
@@ -52,14 +56,12 @@ const Login = () => {
         <View style={{ height: `${100}%` }}>
             <View style={SettingStyle.header}>
                 <View style={HeaderStyle.userInfo}>
-                    <Avatar.Image
-                        size={90}
-                        source={{ uri: 'https://randomuser.me/api/portraits/men/75.jpg' }}
-                        style={SettingStyle.avatar}
-                    />
+                    <View>
+                        {user.avatar ? <Image source={{ uri: user.avatar }} style={[SettingStyle.avata]} /> : ""}
+                    </View>
                     <View style={{ marginLeft: 10 }}>
-                        <Text style={{ fontSize: 22 }}>{setHeader.name} </Text>
-                        <Text>Tuổi {setHeader.age}</Text>
+                        <Text style={{ fontSize: 22 }}>{user.name} </Text>
+                        <Text>Tuổi {new Date().getFullYear() - new Date(user.ngaySinh).getFullYear()}</Text>
                     </View>
 
                 </View>

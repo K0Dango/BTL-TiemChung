@@ -1,11 +1,12 @@
 import axios from "axios"
 
-const BASE_URL = 'http://192.168.1.11:8000/'
+const BASE_URL = 'http://192.168.1.13:8000/'
 
 export const endpoints = {
     'register': 'api/user/',
     'login':'o/token/',
-    'check-email': 'api/check-email'
+    'check-email': 'api/check-email',
+    'check-sdt': 'api/check-sdt'
 }
 
 

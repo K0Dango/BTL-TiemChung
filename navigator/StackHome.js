@@ -2,9 +2,9 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import Home from './components/Home/Home';
-import LichSu from './components/Home/LichSu';
-import LienHe from './components/Home/LienHe';
+import Home from '../components/Home/Home';
+import LichSu from '../components/Home/LichSu';
+import LienHe from '../components/Home/LienHe';
 
 
 const Stack = createStackNavigator();

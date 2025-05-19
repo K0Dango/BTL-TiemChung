@@ -19,6 +19,9 @@ export default StyleSheet.create({
     },
     avatar: {
         marginRight: 10,
+        borderRadius: 50,
+        width: 30,
+        height: 30,
     },
     notificationBadge: {
         position: 'absolute',

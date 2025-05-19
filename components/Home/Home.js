@@ -1,23 +1,24 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import MyStyles from "../../styles/MyStyles";
 import HeaderStyle from "../../styles/HeaderStyle";
 import HomeStyle from "../../styles/HomeStyle";
-import { useState } from "react";
+import SettingStyle from "../../styles/SettingStyle";
+import { useEffect, useState } from "react";
 import { Button, Icon, TextInput } from "react-native-paper";
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from "react-native-gesture-handler";
-import { createStackNavigator } from "@react-navigation/stack";
 import { Avatar } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loadUser } from "../../global";
+
 
 
 
 const Home = () => {
 
     const [notifications, setNotifications] = useState(1);
-
-    const [name, setName] = useState("Nguyen Huu")
 
     const navigation = useNavigation();
 
@@ -28,19 +29,29 @@ const Home = () => {
     const linkLienHe = () => {
         navigation.navigate("LienHe")
     }
+    const [user, setUserData] = useState({});
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userData = await loadUser();
+            if (userData) {
+                setUserData(userData);
+            }
+        };
+        fetchUser();
+    }, []);
+
+    console.log({usr: user.avatar})
     return (
         <View style={{ flex: 1 }}>
             <View style={HomeStyle.header}>
                 <View style={HeaderStyle.userInfo}>
-                    <Avatar.Image
-                        size={50}
-                        source={{ uri: 'https://randomuser.me/api/portraits/men/75.jpg' }}
-                        style={HeaderStyle.avatar}
-                    />
+                    <View>
+                        {user.avatar ? <Image source={{ uri: user.avatar }} style={[HomeStyle.avata]} /> : ""}
+                    </View>
                     <View>
                         <Text>Chào mừng</Text>
-                        <Text style={{ fontSize: 19 }}>{name} </Text>
+                        <Text style={{ fontSize: 19 }}>{user.name} </Text>
                     </View>
                 </View>
                 <View style={{ alignItems: "center" }}>

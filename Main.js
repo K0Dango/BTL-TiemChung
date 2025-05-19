@@ -4,9 +4,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { View, Text } from "react-native";
 
 
-import StackHome from './StackHome';
+import StackHome from './navigator/StackHome';
 import DangKyTiem from './components/Home/DangKyTiem';
-import ScreenSetting from "./ScreenSetting";
+import ScreenSetting from "./navigator/ScreenSetting";
 import { TouchableOpacity } from "react-native";
 import MyStyles from "./styles/MyStyles";
 
