@@ -6,8 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loadUser } from "../../global";
+import Apis, { authApis, endpoints } from "../../config/Apis";
 
-const BASE_URL = 'http://192.168.1.13:8000';
+// const BASE_URL = 'http://192.168.1.19:8000';
 
 
 const Login = () => {
@@ -56,7 +57,7 @@ const Login = () => {
         else {
             try {
                 setLoading(true)
-                const res = await axios.post(`${BASE_URL}/api/o/token/`, {
+                const res = await Apis.post(endpoints['login'], {
                     grant_type: 'password',
                     username: account.email,
                     password: account.mk,
@@ -70,10 +71,7 @@ const Login = () => {
                 console.log('Login response:', res.data);
                 const { access_token } = res.data;
 
-                const userRes = await axios.get(`${BASE_URL}/api/user/me`, {
-                    headers: { Authorization: `Bearer ${access_token}` }
-                });
-
+                const userRes = await authApis(res.data.access_token).get(endpoints['current-user'])
                 const user = userRes.data;
                 console.log("User loaded from AsyncStorage:", user);
 
@@ -105,17 +103,17 @@ const Login = () => {
     return (
 
         <View style={[MyStyles.container, { marginTop: 30 }]}>
-                {loading && (
-                    <View style={{
-                        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                        backgroundColor: 'rgba(0,0,0,0.3)',
-                        justifyContent: 'center', alignItems: 'center',
-                        zIndex: 10
-                    }}>
-                        <ActivityIndicator size="large" color="#fff" />
-                        <Text style={{ color: "#fff", marginTop: 10 }}>Đang xử lý...</Text>
-                    </View>
-                )}
+            {loading && (
+                <View style={{
+                    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.3)',
+                    justifyContent: 'center', alignItems: 'center',
+                    zIndex: 10
+                }}>
+                    <ActivityIndicator size="large" color="#fff" />
+                    <Text style={{ color: "#fff", marginTop: 10 }}>Đang xử lý...</Text>
+                </View>
+            )}
             <View style={[MyStyles.container]}>
                 <Text style={[MyStyles.text_center, { fontSize: 30 }]}>Đăng nhập</Text>
 

@@ -86,14 +86,9 @@ const Register = () => {
                 name: avatar.fileName || 'avatar.jpg',
                 type: avatar.mimeType || 'image/jpeg',
             });
-        } else {
-            form.append('avatar', DEFAULT_AVATAR);
-            form.append('avatar', {
-                uri: avatar.uri,
-                name: avatar.fileName || 'avatar.jpg',
-                type: avatar.mimeType || 'image/jpeg',
-            });
         }
+        console.log("Ảnh được chọn:", avatar.uri);
+
 
         try {
             setLoading(true);
@@ -105,7 +100,6 @@ const Register = () => {
             Alert.alert('Thành công', 'Đăng ký thành công');
             navigation.navigate('Login');
         } catch (err) {
-            console.log("Ảnh được chọn:", avatar);
 
             console.log('Lỗi khác:', err.message);
             Alert.alert('Lỗi', 'Đăng ký thất bại');
@@ -179,12 +173,12 @@ const Register = () => {
     };
 
     const checkEmail = async () => {
-        const res = await Apis.get(`api/check-email/?email=${user.email}`);
+        const res = await Apis.get(endpoints['check-email'] + `?email=${user.email}`);
         return res.data.exits;
     }
 
     const checkSdt = async () => {
-        const res = await Apis.get(`api/check-sdt/?sdt=${user.sdt}`)
+        const res = await Apis.get(endpoints['check-sdt'] + `?sdt=${user.sdt}`)
         return res.data.exits
     }
 

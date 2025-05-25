@@ -7,12 +7,10 @@ import { useEffect } from "react";
 import { loadUser } from "../../../global";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Apis, { endpoints } from "../../../config/Apis";
 
 
 
-
-
-const BASE_URL = 'http://192.168.1.13:8000';
 
 const RePass = () => {
 
@@ -65,7 +63,7 @@ const RePass = () => {
 
         try {
             setLoading(true)
-            const res = await axios.post(`${BASE_URL}/api/user/check-pass/`,
+            const res = await Apis.post(endpoints['check-pass'],
                 { old_pass: password },
                 {
                     headers: {
@@ -104,8 +102,8 @@ const RePass = () => {
         const token = await AsyncStorage.getItem('token');
         try {
             setLoading(true)
-            const response = await axios.post(
-                `${BASE_URL}/api/user/change-password/`,
+            const response = await Apis.post(
+                endpoints['change-password'],
                 {
                     new_password: newPassword,
                 },

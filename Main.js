@@ -45,6 +45,16 @@ const Main = () => {
                 options={{
                     tabBarIcon: ({ color }) => <Icon name="settings" color={color} size={28} />,
                 }}
+                listeners={({ navigation }) => ({
+                    tabPress: e => {
+                        e.preventDefault();
+                        navigation.navigate('Setting', {
+                            screen: 'Setting',
+                        });
+                    },
+                })
+                }
+
             />
 
 
