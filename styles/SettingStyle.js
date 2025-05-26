@@ -7,10 +7,14 @@ export default StyleSheet.create({
         height: `${20}%`,
     }, avata: {
         ...Header.avatar,
-        width: 120,
-        height: 120,
-        borderRadius:70,
-        padding:10,
+        width: '100%',
+        height: '100%',
+        borderRadius: 99999,
+    },
+    userInfo: {
+        ...Header.userInfo,
+        height: `100%`,
+        width: '100%',
     },
     touch: {
         marginHorizontal: 4,

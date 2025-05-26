@@ -10,6 +10,7 @@ export const endpoints = {
     'current-user': 'api/current-user/',
     'check-pass': 'api/check-pass/',
     'change-password': 'api/change-password/',
+    'update-info': 'api/update-info/',
 }
 
 

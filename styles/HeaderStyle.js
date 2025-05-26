@@ -19,7 +19,7 @@ export default StyleSheet.create({
     },
     avatar: {
         marginRight: 10,
-        borderRadius: 50,
+        borderRadius: 9999,
         width: 30,
         height: 30,
     },

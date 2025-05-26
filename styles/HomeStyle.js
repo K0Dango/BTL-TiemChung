@@ -5,11 +5,16 @@ import Header from "./HeaderStyle";
 export default StyleSheet.create({
     header: {
         ...Header.header,
-        height: '10%',
-    }, avata: {
+        height: `12%`,
+    },
+    userInfo: {
+        ...Header.userInfo,
+        height: `130%`,
+    },
+    avata: {
         ...Header.avatar,
-        width: 80,
-        height: 80,
+        height: `100%`,
+        width: `100%`
     },
     Touch: {
         width: `25%`,

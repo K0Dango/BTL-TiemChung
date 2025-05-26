@@ -10,6 +10,7 @@ urlpatterns = [
     path('current-user/', views.current_user),
     path('change-password/', views.change_password),
     path('check-pass/', views.check_pass),
+    path('update-info/', views.update_user_info),
     path('', include(router.urls)),
     # path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]

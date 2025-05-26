@@ -61,3 +61,14 @@ def check_pass(request):
         return Response({'valid': True})
     else:
         return Response({'valid': False})
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser, JSONParser])
+def update_user_info(request):
+    serializer = UserSerializer(request.user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=400)

@@ -37,7 +37,8 @@ const Login = () => {
         fetchUser();
     }, []);
 
-    const linkLogOut = () => {
+    const linkLogOut = async () => {
+        await AsyncStorage.removeItem('token');
         navigation.reset({
             index: 0,
             routes: [{ name: "Login" }]
@@ -49,7 +50,7 @@ const Login = () => {
     }
 
     const linkReInfo = () => {
-        navigation.navigate("ReInfo")
+        navigation.navigate("ReInfo", { linkLogOut: linkLogOut })
     }
 
     const copyToClipboard = (text) => {
@@ -59,8 +60,8 @@ const Login = () => {
     return (
         <View style={{ height: `${100}%` }}>
             <View style={SettingStyle.header}>
-                <View style={HeaderStyle.userInfo}>
-                    <View>
+                <View style={SettingStyle.userInfo}>
+                    <View style={[{ width: '25%', height: `100%`, aspectRatio: 1, }]}>
                         {user.avatar ? <Image source={{ uri: user.avatar }} style={[SettingStyle.avata]} /> : ""}
                     </View>
                     <View style={{ marginLeft: 10 }}>

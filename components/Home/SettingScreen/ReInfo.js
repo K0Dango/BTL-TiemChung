@@ -7,9 +7,15 @@ import MyStyle from "../../../styles/MyStyles"
 import ReInfoStyle from "../../../styles/ReInfoStyle";
 import { TextInput } from "react-native-paper";
 import DateTimePicker from '@react-native-community/datetimepicker'
+import Apis, { endpoints } from "../../../config/Apis";
+import * as ImgPicker from 'expo-image-picker';
+import { ImagePickerIOS } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import setting from "../Setting"
 
 
-const ReInfo = () => {
+const ReInfo = ({ route, navigation }) => {
+    const { linkLogOut } = route.params;
 
     const [userInfos, setUserInfo] = useState({
         name: '',
@@ -18,14 +24,20 @@ const ReInfo = () => {
         gioiTinh: 'NAM',
         ngaySinh: new Date(),
         diaChi: '',
-        avatar: ''
     });
+
+    const [oldInfo, setOldInfo] = useState({
+        email: '',
+        sdt: ''
+    })
 
     const [errors, setError] = useState({});
 
     const [showPicker, setShowPicker] = useState(false);
 
-    const [loading, serLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
+
+    const [avatar, setAvatar] = useState('')
 
     const setState = (value, field) => {
         setUserInfo({ ...userInfos, [field]: value });
@@ -38,12 +50,38 @@ const ReInfo = () => {
             if (userData) {
                 userData.ngaySinh = new Date(userData.ngaySinh)
                 setUserInfo(userData)
+                setAvatar(userData.avatar)
+                setOldInfo({ email: userData.email, sdt: userData.sdt })
+
             }
+            console.log(userInfos.avatar)
+
         }
         fetchUser();
     }, [])
 
-    const check = () => {
+    const pickAvatar = async () => {
+        let { status } = await ImgPicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            alert("Permissions denied!");
+        } else {
+            const r = await ImgPicker.launchImageLibraryAsync();
+            if (!r.canceled)
+                setAvatar(r.assets[0]);
+        }
+    }
+
+    const checkEmail = async () => {
+        const res = await Apis.get(endpoints['check-email'] + `?email=${userInfos.email}`);
+        return res.data.exits;
+    }
+
+    const checkSdt = async () => {
+        const res = await Apis.get(endpoints['check-sdt'] + `?sdt=${userInfos.sdt}`)
+        return res.data.exits;
+    }
+
+    const check = async () => {
         const emailRegex = /^[a-zA-Z0-9]+@gmail\.com$/;
         const phoneRegex = /^0/;
         let error = {};
@@ -52,6 +90,12 @@ const ReInfo = () => {
         if (userInfos.email) {
             if (!emailRegex.test(userInfos.email))
                 error.email = "Nhập email chưa đúng định dạng"
+            else if (userInfos.email !== oldInfo.email) {
+                const res = await checkEmail();
+                if (res) {
+                    error.email = "Email đã được dùng"
+                }
+            }
         }
         else
             errors.email = "Chưa nhập email"
@@ -60,6 +104,11 @@ const ReInfo = () => {
                 error.sdt = "Số điện thoại chưa đúng định dạng"
             else if (userInfos.sdt.length < 10)
                 error.sdt = "Số điện thoại chưa đủ số"
+            else if (userInfos.sdt !== oldInfo.sdt) {
+                const res = await checkSdt();
+                if (res)
+                    error.sdt = "Số điện thoại đã được dùng"
+            }
         }
         else
             error.sdt = "Chưa nhập số điện thoại"
@@ -70,9 +119,62 @@ const ReInfo = () => {
             error.diaChi = "Chưa nhập địa chỉ"
         if (Object.keys(error).length > 0)
             setError(error);
-        else
-            alert("Thông tin hợp lệ")
+        else {
+            console.log("Thong tin")
+            upload()
+        }
     }
+
+    const upload = async () => {
+
+
+        setLoading(true)
+
+        const token = await AsyncStorage.getItem('token');
+
+        console.log(token);
+
+        const formData = new FormData();
+        formData.append('username', userInfos.name);
+        formData.append('email', userInfos.email)
+        formData.append('sdt', userInfos.sdt)
+        formData.append('gioiTinh', userInfos.gioiTinh)
+        formData.append('ngaySinh', userInfos.ngaySinh.toISOString().split('T')[0])
+        formData.append('diaChi', userInfos.diaChi)
+        if (avatar && typeof avatar !== 'string') {
+            formData.append('avatar', {
+                uri: avatar.uri,
+                name: avatar.name || 'avatar.jpg',
+                type: avatar.mimeType || 'image/jpeg',
+            })
+        }
+        console.log(avatar)
+        for (let pair of formData.entries()) {
+            console.log(`${pair[0]}: ${pair[1]}`);
+        }
+
+        try {
+            const response = await Apis.patch(endpoints['update-info'], formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+
+            console.log('Cập nhật thành công', response.data);
+            alert("Cập nhật thành công\nHãy đăng nhập lại!!!");
+            if(linkLogOut){
+                linkLogOut();
+            }
+
+        } catch (error) {
+            console.error('Network request failed:', error);
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+
 
     return (
         <View style={[MyStyle.container]}>
@@ -91,9 +193,9 @@ const ReInfo = () => {
                     )}
                     <View style={[ReInfoStyle.reAvatar]}>
                         <View>
-                            {userInfos.avatar ? <Image source={{ uri: userInfos.avatar }} style={[ReInfoStyle.avatar]} /> : ""}
+                            {avatar ? <Image source={{ uri: avatar.uri || avatar }} style={[ReInfoStyle.avatar]} onPress={() => pickAvatar()} /> : ""}
                             <View style={[{ position: "absolute", bottom: 0, right: 0 }]}>
-                                <TouchableOpacity style={[ReInfoStyle.icon]}>
+                                <TouchableOpacity style={[ReInfoStyle.icon]} onPress={() => pickAvatar()}>
                                     <Icon name="pen" size={18} color="white" />
                                 </TouchableOpacity>
                             </View>
@@ -149,7 +251,7 @@ const ReInfo = () => {
                     </View>
 
                 </View>
-                <Button style={[ReInfoStyle.input, { backgroundColor: "blue" }]} disable={loading} loading={loading} onPress={() => check()}>Cập nhật thông tin</Button>
+                <Button style={[ReInfoStyle.input, { backgroundColor: "blue" }]} disabled={loading} loading={loading} onPress={() => check()}>Cập nhật thông tin</Button>
             </ScrollView>
         </View>
     )

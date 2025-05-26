@@ -45,8 +45,8 @@ const Home = () => {
     return (
         <View style={{ flex: 1 }}>
             <View style={HomeStyle.header}>
-                <View style={HeaderStyle.userInfo}>
-                    <View>
+                <View style={[HomeStyle.userInfo]}>
+                    <View style={[{width: '33%', height: `100%`, aspectRatio: 1,}]}>
                         {user.avatar ? <Image source={{ uri: user.avatar }} style={[HomeStyle.avata]} /> : ""}
                     </View>
                     <View>
