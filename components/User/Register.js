@@ -156,10 +156,7 @@ const Register = () => {
         }
         else
             setError.sdt = "Vui lòng nhập số điện thoại";
-
-        if (!user.gioiTinh)
-            setError.gioiTinh = "Vui lòng chọn giới tính";
-        if (new Date().getFullYear() - user.ngaySinh.getFullYear() < 18)
+        if ((new Date().getFullYear() - user.ngaySinh.getFullYear()) < 18)
             setError.ngaySinh = "Chưa đủ 18 tuổi";
         if (!user.diaChi)
             setError.diaChi = "Vui lòng nhập địa chỉ";

@@ -48,6 +48,10 @@ const Login = () => {
         navigation.navigate("RePass");
     }
 
+    const linkReInfo = () => {
+        navigation.navigate("ReInfo")
+    }
+
     const copyToClipboard = (text) => {
         Clipboard.setStringAsync(text);
     };
@@ -78,7 +82,7 @@ const Login = () => {
             </View>
             <ScrollView>
                 <View>
-                    <TouchableOpacity style={SettingStyle.touch} >
+                    <TouchableOpacity style={SettingStyle.touch} onPress={() => linkReInfo()} >
                         <View style={SettingStyle.viewTouch}>
                             <Text style={SettingStyle.textTouch}>Chỉnh sửa thông tin</Text>
                         </View>

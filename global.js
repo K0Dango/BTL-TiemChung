@@ -19,8 +19,8 @@ export const loadUser = async () => {
                 email: user.email,
                 password: user.password,
                 sdt: user.sdt,
-                gender: user.gioiTinh,
-                address: user.diaChi,
+                gioiTinh: user.gioiTinh,
+                diaChi: user.diaChi,
                 ngaySinh: user.ngaySinh,
                 avatar: user.avatar
             };

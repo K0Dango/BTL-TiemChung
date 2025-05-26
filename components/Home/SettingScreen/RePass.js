@@ -6,11 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 import { useEffect } from "react";
 import { loadUser } from "../../../global";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import Apis, { endpoints } from "../../../config/Apis";
 
 
-
+    
 
 const RePass = () => {
 
