@@ -5,7 +5,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register('user', views.UserViewSet)
 router.register('vaccine', views.VaccineViewSet)
-router.register('LoaiVaccine', views.LoaiVaccineViewSet)
+router.register('loai-vaccine', views.LoaiVaccineViewSet)
 urlpatterns = [
     path('check-email/', views.check_email),
     path('check-sdt/', views.check_sdt),

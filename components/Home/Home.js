@@ -29,6 +29,9 @@ const Home = () => {
     const linkLienHe = () => {
         navigation.navigate("LienHe")
     }
+    const linkLoaiVC = () => {
+        navigation.navigate("LoaiVC")
+    }
     const [user, setUserData] = useState({});
 
     useEffect(() => {
@@ -67,7 +70,7 @@ const Home = () => {
             </View>
             <ScrollView>
                 <View style={HomeStyle.viewItem}>
-                    <TouchableOpacity style={HomeStyle.Touch}>
+                    <TouchableOpacity style={HomeStyle.Touch} onPress={() => linkLoaiVC()}>
                         <View style={HomeStyle.item}>
                             <Icon1 name="category" size={60} color="blue" />
                             <Text style={HomeStyle.textItem}>Danh sách Vacxin</Text>

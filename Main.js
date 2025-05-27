@@ -31,7 +31,17 @@ const Main = () => {
         <Tab.Navigator initialRouteName="StackHome" screenOptions={{ headerShown: false, tabBarActiveTintColor: '#fff', tabBarInactiveTintColor: '#fff', tabBarStyle: { backgroundColor: 'blue' } }}>
             <Tab.Screen name="StackHome" component={StackHome} options={{
                 tabBarIcon: ({ color }) => <Icon name="home" color={color} size={28} />
-            }} />
+            }}
+                listeners={({ navigation }) => ({
+                    tabPress: e => {
+                        e.preventDefault();
+                        navigation.navigate('StackHome', {
+                            screen: 'Home',
+                        });
+                    },
+                })
+                }
+            />
             <Tab.Screen
                 name="Đăng ký tiêm"
                 component={DangKyTiem}

@@ -11,6 +11,8 @@ export const endpoints = {
     'check-pass': 'api/check-pass/',
     'change-password': 'api/change-password/',
     'update-info': 'api/update-info/',
+    'loai-vaccine': 'api/loai-vaccine/',
+    'vaccine': 'api/vaccine/'
 }
 
 

@@ -81,6 +81,6 @@ class LoaiVaccineViewSet(viewsets.ModelViewSet):
 
 
 class VaccineViewSet(viewsets.ModelViewSet):
-    queryset = Vaccine.objects.select_related('loai_vaccine').all()
+    queryset = Vaccine.objects.select_related('loaiVaccine').all()
     serializer_class = VaccineSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]

@@ -22,7 +22,7 @@ class UserSerializer(ModelSerializer):
 
 class LoaiVaccineSerializer(ModelSerializer):
     class Meta:
-        model: LoaiVaccine
+        model = LoaiVaccine
         fields = '__all__'
 
 
@@ -30,12 +30,12 @@ class VaccineSerializer(ModelSerializer):
     loai_vaccine = LoaiVaccineSerializer(read_only=True)
     loai_vaccine_id = PrimaryKeyRelatedField(
         queryset=LoaiVaccine.objects.all(),
-        source='loai_vaccine',
+        source='loaiVaccine',
         write_only=True
     )
 
     class Meta:
         model = Vaccine
-        fields = ['ma_vaccine', 'ten_vc', 'loai_vaccine', 'loai_vaccine_id', 'tuoi', 'nsx', 'hsd', 'nguon_goc', 'gia']
+        fields = ['maVaccine', 'tenVc', 'loai_vaccine', 'loai_vaccine_id', 'tuoi', 'NSX', 'HSD', 'nguonGoc', 'gia']
     
 

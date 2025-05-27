@@ -68,20 +68,20 @@ class User(AbstractUser):
 
 
 class LoaiVaccine(models.Model):
-    ma_loai = models.CharField(max_length=10, primary_key=True)
-    ten_loai = models.CharField(max_length=100)
+    maLoai = models.CharField(max_length=10, primary_key=True)
+    tenLoai = models.CharField(max_length=100)
 
     def __str__(self):
         return self.ten_loai
 
 class Vaccine(models.Model):
-    ma_vaccine = models.CharField(max_length=10, primary_key=True)
-    ten_vc = models.CharField(max_length=100)
-    loai_vaccine = models.ForeignKey(LoaiVaccine, on_delete=models.CASCADE, related_name='vaccines')
+    maVaccine = models.CharField(max_length=10, primary_key=True)
+    tenVc = models.CharField(max_length=100)
+    loaiVaccine = models.ForeignKey(LoaiVaccine, on_delete=models.CASCADE, related_name='vaccines')
     tuoi = models.IntegerField()
-    nsx = models.DateField() 
-    hsd = models.DateField()  
-    nguon_goc = models.CharField(max_length=100)
+    NSX = models.DateField() 
+    HSD = models.DateField()  
+    nguonGoc = models.CharField(max_length=100)
     gia = models.DecimalField(max_digits=12, decimal_places=2)
 
     def __str__(self):

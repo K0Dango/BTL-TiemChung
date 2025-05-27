@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Apis, { endpoints } from "./config/Apis";
 
 
 export const GlobalData = {
@@ -31,3 +32,31 @@ export const loadUser = async () => {
         return null;
     }
 };
+
+
+
+export const loadLoaiVC = async () => {
+    try {
+        let res = await Apis.get(endpoints['loai-vaccine']);
+        return res.data.results
+    }
+    catch (error) {
+        console.error(error)
+        return null
+    }
+}
+
+
+export const loadVaccine = async () => {
+    try {
+        console.log("4")
+        let res = await Apis.get(endpoints['vaccine']);
+        console.log(res.data)
+
+        return res.data.results
+    }
+    catch(error){
+        console.error(error)
+        return null
+    }
+}
