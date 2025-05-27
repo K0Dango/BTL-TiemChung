@@ -1,10 +1,10 @@
 from rest_framework import viewsets, permissions, generics, status
-from .models import User
-from .serializers import UserSerializer
+from .models import User, LoaiVaccine, Vaccine
+from .serializers import UserSerializer, LoaiVaccineSerializer, VaccineSerializer
 from rest_framework.parsers import MultiPartParser, JSONParser, FormParser
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, parser_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.contrib.auth.hashers import check_password
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 
@@ -72,3 +72,15 @@ def update_user_info(request):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
+
+
+class LoaiVaccineViewSet(viewsets.ModelViewSet):
+    queryset = LoaiVaccine.objects.all()
+    serializer_class = LoaiVaccineSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+
+class VaccineViewSet(viewsets.ModelViewSet):
+    queryset = Vaccine.objects.select_related('loai_vaccine').all()
+    serializer_class = VaccineSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]

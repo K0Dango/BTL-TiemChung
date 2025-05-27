@@ -38,7 +38,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=1, choices=ROLE_CHOICES, default='3')
     # created_at = models.DateTimeField(auto_now_add=True)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']  # nếu bạn vẫn dùng username
+    REQUIRED_FIELDS = ['username'] 
 
 
     # def save(self, *args, **kwargs):
@@ -66,3 +66,23 @@ class User(AbstractUser):
         role_name = dict(self.ROLE_CHOICES).get(self.role, 'User')
         return f"{self.email} ({role_name})"
 
+
+class LoaiVaccine(models.Model):
+    ma_loai = models.CharField(max_length=10, primary_key=True)
+    ten_loai = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.ten_loai
+
+class Vaccine(models.Model):
+    ma_vaccine = models.CharField(max_length=10, primary_key=True)
+    ten_vc = models.CharField(max_length=100)
+    loai_vaccine = models.ForeignKey(LoaiVaccine, on_delete=models.CASCADE, related_name='vaccines')
+    tuoi = models.IntegerField()
+    nsx = models.DateField() 
+    hsd = models.DateField()  
+    nguon_goc = models.CharField(max_length=100)
+    gia = models.DecimalField(max_digits=12, decimal_places=2)
+
+    def __str__(self):
+        return self.ten_vc

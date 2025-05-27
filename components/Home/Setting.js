@@ -61,7 +61,7 @@ const Login = () => {
         <View style={{ height: `${100}%` }}>
             <View style={SettingStyle.header}>
                 <View style={SettingStyle.userInfo}>
-                    <View style={[{ width: '25%', height: `100%`, aspectRatio: 1, }]}>
+                    <View style={[{ width: '30%', height: `100%`, aspectRatio: 1, }]}>
                         {user.avatar ? <Image source={{ uri: user.avatar }} style={[SettingStyle.avata]} /> : ""}
                     </View>
                     <View style={{ marginLeft: 10 }}>

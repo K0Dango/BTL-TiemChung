@@ -1,5 +1,5 @@
-from rest_framework.serializers import ModelSerializer, CharField, ImageField, ValidationError
-from .models import User
+from rest_framework.serializers import ModelSerializer, CharField, ImageField, ValidationError, PrimaryKeyRelatedField
+from .models import User, LoaiVaccine, Vaccine
 from django.contrib.auth.hashers import make_password
 
 
@@ -18,3 +18,24 @@ class UserSerializer(ModelSerializer):
         user.password = make_password(password)
         user.save()
         return user
+    
+
+class LoaiVaccineSerializer(ModelSerializer):
+    class Meta:
+        model: LoaiVaccine
+        fields = '__all__'
+
+
+class VaccineSerializer(ModelSerializer):
+    loai_vaccine = LoaiVaccineSerializer(read_only=True)
+    loai_vaccine_id = PrimaryKeyRelatedField(
+        queryset=LoaiVaccine.objects.all(),
+        source='loai_vaccine',
+        write_only=True
+    )
+
+    class Meta:
+        model = Vaccine
+        fields = ['ma_vaccine', 'ten_vc', 'loai_vaccine', 'loai_vaccine_id', 'tuoi', 'nsx', 'hsd', 'nguon_goc', 'gia']
+    
+
