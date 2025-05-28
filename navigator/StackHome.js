@@ -6,6 +6,7 @@ import Home from '../components/Home/Home';
 import LichSu from '../components/Home/LichSu';
 import LienHe from '../components/Home/LienHe';
 import LoaiVaccine from '../components/Home/HomeScreen/LoaiVaccine';
+import VaccineTL from '../components/Home/HomeScreen/VaccineTL';
 
 
 const Stack = createStackNavigator();
@@ -27,6 +28,7 @@ const StackHome = () => {
             <Stack.Screen name="LichSu" component={LichSu} options={{ headerShown: true, headerTitle: "Lịch sử" }} />
             <Stack.Screen name="LienHe" component={LienHe} options={{ headerShown: true, headerTitle: "Liên hệ" }} />
             <Stack.Screen name="LoaiVC" component={LoaiVaccine} options={{ headerShown: true, headerTitle: "Danh Sách Vaccine" }} />
+            <Stack.Screen name="VaccineTL" component={VaccineTL} options={{ headerShown: true, headerTitle: "Danh Sách Vaccine" }} />
         </Stack.Navigator>
 
     )

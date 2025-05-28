@@ -11,10 +11,10 @@ import Apis, { endpoints } from "../../../config/Apis";
 import * as ImgPicker from 'expo-image-picker';
 import { ImagePickerIOS } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import setting from "../Setting"
 
 
-const ReInfo = ({ route, navigation }) => {
+
+const ReInfo = ({ route}) => {
     const { linkLogOut } = route.params;
 
     const [userInfos, setUserInfo] = useState({

@@ -13,6 +13,7 @@ urlpatterns = [
     path('change-password/', views.change_password),
     path('check-pass/', views.check_pass),
     path('update-info/', views.update_user_info),
+    # path('vaccine-loai/', views.locLoaiVaccine),
     path('', include(router.urls)),
     # path('o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-]
+] + router.urls

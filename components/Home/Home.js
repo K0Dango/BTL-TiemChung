@@ -9,7 +9,6 @@ import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from "react-native-gesture-handler";
-import { Avatar } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loadUser } from "../../global";
 
@@ -32,6 +31,7 @@ const Home = () => {
     const linkLoaiVC = () => {
         navigation.navigate("LoaiVC")
     }
+
     const [user, setUserData] = useState({});
 
     useEffect(() => {
@@ -44,12 +44,12 @@ const Home = () => {
         fetchUser();
     }, []);
 
-    console.log({usr: user.avatar})
+    console.log({ usr: user.avatar })
     return (
         <View style={{ flex: 1 }}>
             <View style={HomeStyle.header}>
                 <View style={[HomeStyle.userInfo]}>
-                    <View style={[{width: '33%', height: `100%`, aspectRatio: 1, marginRight: 10}]}>
+                    <View style={[{ width: '33%', height: `100%`, aspectRatio: 1, marginRight: 10 }]}>
                         {user.avatar ? <Image source={{ uri: user.avatar }} style={[HomeStyle.avata]} /> : ""}
                     </View>
                     <View>

@@ -36,15 +36,21 @@ export const loadUser = async () => {
 
 
 export const loadLoaiVC = async () => {
-    try {
-        let res = await Apis.get(endpoints['loai-vaccine']);
-        return res.data.results
-    }
-    catch (error) {
-        console.error(error)
-        return null
+    const [page, setPage] = useState(endpoints['loai-vaccine'])
+    if (!page) return;
+    else {
+        try {
+            let res = await Apis.get(endpoints['loai-vaccine']);
+            setPage(res.data.next)
+            return res.data.results
+        }
+        catch (error) {
+            console.error(error)
+            return null
+        }
     }
 }
+
 
 
 export const loadVaccine = async () => {
@@ -55,7 +61,7 @@ export const loadVaccine = async () => {
 
         return res.data.results
     }
-    catch(error){
+    catch (error) {
         console.error(error)
         return null
     }

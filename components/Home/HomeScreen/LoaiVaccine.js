@@ -2,56 +2,54 @@ import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react"
 import Apis, { endpoints } from "../../../config/Apis"
 import { ActivityIndicator, Alert, FlatList, View, Text, TouchableOpacity } from "react-native";
-import { loadLoaiVC, loadVaccine } from "../../../global";
+// import { loadLoaiVC, loadVaccine } from "../../../global";
 import LoaiVcStyle from "../../../styles/LoaiVcStyle";
 
 const LoaiVaccine = () => {
     const [loaiVC, setLoaiVC] = useState([]);
-    const [vaccine, setVaccine] = useState([]);
 
     const [q, setQ] = useState("");
     const [maLoai, setMaLoai] = useState("");
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(endpoints['loai-vaccine']);
 
     const [loading, setLoading] = useState(false);
     const nav = useNavigation();
 
+    const loadLoaiVC = async () => {
+        console.log(page)
+        if (!page || loading) return;
+        try {
+            setLoading(true)
+            const res = await Apis.get(page);
+            setLoaiVC(prev => [...prev, ...res.data.results])
+            setPage(res.data.next)
+        } catch (error) {
+            console.error(error)
+            Alert("Lỗi dữ liêu!\nVui lòng quay lại sao!!!")
+        } finally {
+            setLoading(false)
+        }
+    }
 
     useEffect(() => {
-        const getData = async () => {
-            console.log("1")
-
-            let res = await loadLoaiVC();
-            if (res)
-                setLoaiVC(res)
-            console.log("2")
-            res = await loadVaccine();
-            console.log("3")
-
-            if (res)
-                setVaccine(res)
-            console.log(vaccine)
-            console.log(loaiVC)
-        }
-        getData();
+        loadLoaiVC()
     }, [])
 
     return (
         <View style={[LoaiVcStyle.container]}>
-            {loading ? (<ActivityIndicator size='large' color="grey" />) : (
-                <FlatList data={loaiVC} keyExtractor={(item) => item.maLoai} renderItem={({ item }) => (
-                    <TouchableOpacity style={[LoaiVcStyle.item, {}]}>
-                        <Text style={[LoaiVcStyle.textItem]}>{item.tenLoai}</Text>
-                    </TouchableOpacity>
-                )} />
-                // <FlatList data={vaccine} keyExtractor={(item) => item.maVaccine} renderItem={({ item }) => (
-                //     <TouchableOpacity style={[LoaiVcStyle.item, {}]}>
-                //         <Text style={[LoaiVcStyle.textItem]}>{item.tenVc}</Text>
-                //         <Text style={[LoaiVcStyle.textItem]}>Quốc gia: {item.nguonGoc}</Text>
-                //     </TouchableOpacity>
 
-                // )} />
+            <FlatList data={loaiVC} keyExtractor={(item) => item.maLoai} renderItem={({ item }) => (
+                <TouchableOpacity style={[LoaiVcStyle.item, {}]} onPress={() => {
+                    nav.navigate("VaccineTL", { maLoai: item.maLoai })
+                }}>
+                    <Text style={[LoaiVcStyle.textItem]}>{item.tenLoai}</Text>
+                </TouchableOpacity>
             )}
+                onEndReached={loadLoaiVC}
+                onEndReachedThreshold={0.2}
+                ListFooterComponent={loading && <ActivityIndicator size='large' color='gey' />}
+            />
+
         </View>
     )
 }

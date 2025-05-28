@@ -3,10 +3,11 @@ from .models import User, LoaiVaccine, Vaccine
 from .serializers import UserSerializer, LoaiVaccineSerializer, VaccineSerializer
 from rest_framework.parsers import MultiPartParser, JSONParser, FormParser
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes, action
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.contrib.auth.hashers import check_password
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
+from rest_framework.pagination import PageNumberPagination
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -84,3 +85,15 @@ class VaccineViewSet(viewsets.ModelViewSet):
     queryset = Vaccine.objects.select_related('loaiVaccine').all()
     serializer_class = VaccineSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    @action(detail=False, methods=['GET'], url_path='loai')
+    def locLoaiVaccine(self, request):
+        maLoai = request.query_params.get('maLoai')
+        vaccine = Vaccine.objects.filter(loaiVaccine_id=maLoai)
+        page = self.paginate_queryset(vaccine)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        return Response(serializer.data)
+
+
