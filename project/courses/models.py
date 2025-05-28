@@ -86,3 +86,11 @@ class Vaccine(models.Model):
 
     def __str__(self):
         return self.tenVc
+    
+class GioHang(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='gio_hang')
+    vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE, related_name='gio_hang')
+    soLuong = models.IntegerField(default='1')
+
+    def __str__(self):
+        return str(self.id)

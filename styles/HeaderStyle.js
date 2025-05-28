@@ -31,7 +31,7 @@ export default StyleSheet.create({
         borderRadius: 10,
         width: 20,
         height: 20,
-        justifyContent: 'center',
+        // justifyContent: 'center',
         alignItems: 'center',
     },
     notificationText: {

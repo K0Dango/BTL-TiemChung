@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, generics, status
-from .models import User, LoaiVaccine, Vaccine
-from .serializers import UserSerializer, LoaiVaccineSerializer, VaccineSerializer
+from .models import User, LoaiVaccine, Vaccine, GioHang
+from .serializers import UserSerializer, LoaiVaccineSerializer, VaccineSerializer, GioHangSerializer
 from rest_framework.parsers import MultiPartParser, JSONParser, FormParser
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, parser_classes, action
@@ -96,4 +96,14 @@ class VaccineViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
         return Response(serializer.data)
 
+class GioHangViewSet(viewsets.ModelViewSet):
+    queryset = GioHang.objects.all()
+    serializer_class = GioHangSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
 
+    def get_queryset(self):
+        return GioHang.objects.filter(maUser = self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(maUser=self.request.user)
