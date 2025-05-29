@@ -4,12 +4,12 @@ import { FlatList, View, TouchableOpacity, Text, ActivityIndicator } from "react
 import VaccineLoaiStyle from "../../../styles/VaccineLoaiStyle";
 
 
-const VaccineTL = ({ route }) => {
-    const { maLoai } = route.params;
+const VaccineAge = ({ route }) => {
+    const { tuoi } = route.params;
     const [vaccine, setVaccine] = useState([]);
 
     const [q, setQ] = useState("")
-    const [page, setPage] = useState(endpoints['vaccine-loai'] + `?maLoai=${maLoai}`)
+    const [page, setPage] = useState(endpoints['vaccine-tuoi'] + `?tuoi=${tuoi}`)
 
     const [loading, setLoading] = useState(false)
 
@@ -41,8 +41,9 @@ const VaccineTL = ({ route }) => {
                 <TouchableOpacity style={[VaccineLoaiStyle.item]}>
                     <View style={[VaccineLoaiStyle.inf]}>
 
+                        <Text style={[VaccineLoaiStyle.text, {}]}>Loại: {item.loaiVaccine.tenLoai}</Text>
+
                         <Text style={[VaccineLoaiStyle.text, {}]}>Tên: {item.tenVc}</Text>
-                        {item.loaiVaccine.tuoi !== 0 && <Text style={[VaccineLoaiStyle.text]}>Độ tuổi: {item.loaiVaccine.tuoi}</Text>}
 
                         <Text style={[VaccineLoaiStyle.text]}>Số lần tiêm: {item.loaiVaccine.soMui}</Text>
 
@@ -61,4 +62,4 @@ const VaccineTL = ({ route }) => {
         </View>
     )
 }
-export default VaccineTL;
+export default VaccineAge;

@@ -8,6 +8,8 @@ import LichSu from '../components/Home/LichSu';
 import LienHe from '../components/Home/LienHe';
 import LoaiVaccine from '../components/Home/HomeScreen/LoaiVaccine';
 import VaccineTL from '../components/Home/HomeScreen/VaccineTL';
+import TuoiVaccine from '../components/Home/HomeScreen/TuoiVaccine';
+import VaccineAge from '../components/Home/HomeScreen/VaccineAge';
 import { useNavigation } from '@react-navigation/native';
 import { Text, TouchableOpacity, View } from 'react-native';
 import StackHomeStyle from "../styles/StackHomeStyle";
@@ -58,7 +60,21 @@ const StackHome = () => {
                 }, headerRight: () => <LinkGioHang cartCount={cartCount} />
             }}
             />
-            <Stack.Screen name="VaccineTL" component={VaccineTL} options={{ headerShown: true, headerTitle: "Danh Sách Vaccine" }} />
+            <Stack.Screen name="VaccineTL" component={VaccineTL} options={{
+                headerShown: true, headerTitle: "Danh Sách Vaccine", headerStyle: {
+                    backgroundColor: '#007bff'
+                }, headerRight: () => <LinkGioHang cartCount={cartCount} />
+            }} />
+            <Stack.Screen name="TuoiVaccine" component={TuoiVaccine} options={{
+                headerShown: true, headerTitle: "Danh Sách Vaccine", headerStyle: {
+                    backgroundColor: '#007bff'
+                }, headerRight: () => <LinkGioHang cartCount={cartCount} />
+            }} />
+            <Stack.Screen name="VaccineAge" component={VaccineAge} options={{
+                headerShown: true, headerTitle: "Danh Sách Vaccine", headerStyle: {
+                    backgroundColor: '#007bff'
+                }, headerRight: () => <LinkGioHang cartCount={cartCount} />
+            }} />
         </Stack.Navigator>
 
     )

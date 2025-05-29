@@ -32,6 +32,10 @@ const Home = () => {
         navigation.navigate("LoaiVC")
     }
 
+    const linkTuoiVc = () => {
+        navigation.navigate("TuoiVaccine")
+    }
+
     const [user, setUserData] = useState({});
 
     useEffect(() => {
@@ -76,7 +80,7 @@ const Home = () => {
                             <Text style={HomeStyle.textItem}>Danh sách Vacxin</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={HomeStyle.Touch}>
+                    <TouchableOpacity style={HomeStyle.Touch} onPress={() => linkTuoiVc()}>
                         <View style={HomeStyle.item}>
                             <FontAwesome5 name="syringe" size={60} color="blue" />
                             <Text style={HomeStyle.textItem}>Vacxin theo tuổi</Text>

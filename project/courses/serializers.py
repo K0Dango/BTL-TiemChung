@@ -36,7 +36,7 @@ class VaccineSerializer(ModelSerializer):
 
     class Meta:
         model = Vaccine
-        fields = ['maVaccine', 'tenVc', 'loaiVaccine', 'loai_vaccine_id', 'tuoi', 'NSX', 'HSD', 'nguonGoc', 'gia']
+        fields = ['maVaccine', 'tenVc', 'loaiVaccine', 'loai_vaccine_id', 'NSX', 'HSD', 'nguonGoc', 'gia', 'thongTin']
 
 
 class GioHangSerializer(ModelSerializer):

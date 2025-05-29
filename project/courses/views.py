@@ -81,6 +81,7 @@ class LoaiVaccineViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
+
 class VaccineViewSet(viewsets.ModelViewSet):
     queryset = Vaccine.objects.select_related('loaiVaccine').all()
     serializer_class = VaccineSerializer
@@ -89,12 +90,26 @@ class VaccineViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['GET'], url_path='loai')
     def locLoaiVaccine(self, request):
         maLoai = request.query_params.get('maLoai')
-        vaccine = Vaccine.objects.filter(loaiVaccine_id=maLoai)
+        vaccine = Vaccine.objects.filter(loaiVaccine_id=maLoai).select_related('loaiVaccine')
         page = self.paginate_queryset(vaccine)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=["GET"], url_path='tuoi')
+    def locTuoiVaccine(self, request):
+        tuoi = request.query_params.get('tuoi')
+        tuoi = int(tuoi)
+        vaccine = Vaccine.objects.filter(loaiVaccine__tuoi=tuoi).select_related('loaiVaccine')
+
+        page = self.paginate_queryset(vaccine)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        return Response(serializer.data)
+    
+
 
 class GioHangViewSet(viewsets.ModelViewSet):
     queryset = GioHang.objects.all()

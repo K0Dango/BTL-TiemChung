@@ -13,7 +13,8 @@ export const endpoints = {
     'update-info': 'api/update-info/',
     'loai-vaccine': 'api/loai-vaccine/',
     'vaccine': 'api/vaccine/',
-    'vaccine-loai': 'api/vaccine/loai/'
+    'vaccine-loai': 'api/vaccine/loai/',
+    'vaccine-tuoi': 'api/vaccine/tuoi/'
 }
 
 
