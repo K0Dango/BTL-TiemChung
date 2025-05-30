@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Apis, { endpoints } from "../../../config/Apis";
 import { FlatList, View, TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import VaccineLoaiStyle from "../../../styles/VaccineLoaiStyle";
+import { useNavigation } from "@react-navigation/native";
 
 
 const VaccineAge = ({ route }) => {
@@ -12,6 +13,9 @@ const VaccineAge = ({ route }) => {
     const [page, setPage] = useState(endpoints['vaccine-tuoi'] + `?tuoi=${tuoi}`)
 
     const [loading, setLoading] = useState(false)
+
+    const nav = useNavigation()
+
 
     const loadVaccine = async () => {
         console.log(page)
@@ -32,13 +36,14 @@ const VaccineAge = ({ route }) => {
     }
 
     useEffect(() => {
+
         loadVaccine()
     }, [])
 
     return (
         <View style={[VaccineLoaiStyle.container]}>
             <FlatList data={vaccine} keyExtractor={(item) => item.maVaccine} renderItem={({ item }) => (
-                <TouchableOpacity style={[VaccineLoaiStyle.item]}>
+                <TouchableOpacity style={[VaccineLoaiStyle.item]} onPress={() => { nav.navigate("TTVaccine", { vaccine: item }) }}>
                     <View style={[VaccineLoaiStyle.inf]}>
 
                         <Text style={[VaccineLoaiStyle.text, {}]}>Loại: {item.loaiVaccine.tenLoai}</Text>

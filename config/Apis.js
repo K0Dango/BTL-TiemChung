@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const BASE_URL = 'http://192.168.1.5:8000/'
+const BASE_URL = 'http://192.168.0.7:8000/'
 
 export const endpoints = {
     'register': 'api/user/',
@@ -14,7 +14,8 @@ export const endpoints = {
     'loai-vaccine': 'api/loai-vaccine/',
     'vaccine': 'api/vaccine/',
     'vaccine-loai': 'api/vaccine/loai/',
-    'vaccine-tuoi': 'api/vaccine/tuoi/'
+    'vaccine-tuoi': 'api/vaccine/tuoi/',
+    'gio-hang': 'api/gio-hang/'
 }
 
 

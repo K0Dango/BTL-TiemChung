@@ -55,20 +55,20 @@ class GioHangSerializer(ModelSerializer):
         model = GioHang
         fields = ('id', 'user_id', 'emailUser','vaccine_id', 'tenVaccine', 'soLuong')
     
-    def create(self, validated_data):
-        user = validated_data['user']
-        vaccine = validated_data['vaccine']
-        so_luong_moi = validated_data.get('soLuong', 1)
+    # def create(self, validated_data):
+    #     user = validated_data['user']
+    #     vaccine = validated_data['vaccine']
+    #     so_luong_moi = validated_data.get('soLuong', 1)
 
-        gio_hang, created = GioHang.objects.get_or_create(
-            user=user,
-            vaccine=vaccine,
-            defaults={'soLuong': so_luong_moi}
-        )
+    #     gio_hang, created = GioHang.objects.get_or_create(
+    #         user=user,
+    #         vaccine=vaccine,
+    #         defaults={'soLuong': so_luong_moi}
+    #     )
 
-        if not created:
-            gio_hang.soLuong += so_luong_moi
-            gio_hang.save()
+    #     if not created:
+    #         gio_hang.soLuong += so_luong_moi
+    #         gio_hang.save()
 
-        return gio_hang
+    #     return gio_hang
 

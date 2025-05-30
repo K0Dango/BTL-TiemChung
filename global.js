@@ -34,35 +34,3 @@ export const loadUser = async () => {
 };
 
 
-
-export const loadLoaiVC = async () => {
-    const [page, setPage] = useState(endpoints['loai-vaccine'])
-    if (!page) return;
-    else {
-        try {
-            let res = await Apis.get(endpoints['loai-vaccine']);
-            setPage(res.data.next)
-            return res.data.results
-        }
-        catch (error) {
-            console.error(error)
-            return null
-        }
-    }
-}
-
-
-
-export const loadVaccine = async () => {
-    try {
-        console.log("4")
-        let res = await Apis.get(endpoints['vaccine']);
-        console.log(res.data)
-
-        return res.data.results
-    }
-    catch (error) {
-        console.error(error)
-        return null
-    }
-}

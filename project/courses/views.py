@@ -118,7 +118,12 @@ class GioHangViewSet(viewsets.ModelViewSet):
     
 
     def get_queryset(self):
-        return GioHang.objects.filter(maUser = self.request.user)
+        return GioHang.objects.filter(user=self.request.user)
+
+
     
-    def perform_create(self, serializer):
-        serializer.save(maUser=self.request.user)
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)
+
+    
+    
