@@ -21,6 +21,8 @@ const Home = () => {
 
     const navigation = useNavigation();
 
+    
+
     const linkLichSu = () => {
         navigation.navigate("LichSu");
     }
@@ -34,6 +36,10 @@ const Home = () => {
 
     const linkTuoiVc = () => {
         navigation.navigate("TuoiVaccine")
+    }
+
+    const linkLichTiem = () => {
+        navigation.navigate("LichTiem")
     }
 
     const [user, setUserData] = useState({});
@@ -86,7 +92,7 @@ const Home = () => {
                             <Text style={HomeStyle.textItem}>Vacxin theo tuổi</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={HomeStyle.Touch}>
+                    <TouchableOpacity style={HomeStyle.Touch} onPress={() => linkLichTiem()}>
                         <View style={HomeStyle.item}>
                             <Icon1 name="list" size={60} color="blue" />
                             <Text style={HomeStyle.textItem}>Lịch tiêm</Text>

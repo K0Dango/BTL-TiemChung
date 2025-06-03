@@ -19,6 +19,7 @@ import TuoiVaccine from '../components/Home/HomeScreen/TuoiVaccine';
 import VaccineAge from '../components/Home/HomeScreen/VaccineAge';
 import TTVaccine from '../components/Home/HomeScreen/TTVaccine';
 import StackHomeStyle from "../styles/StackHomeStyle";
+import LichTiem from '../components/Home/HomeScreen/LichTiem';
 
 
 const Stack = createStackNavigator();
@@ -70,7 +71,7 @@ const StackHome = () => {
                     <View style={[StackHomeStyle.backGrGioHang]}>
 
                         <Text style={[StackHomeStyle.text, { textAlign: "center" }]}>Danh sách giỏ hàng</Text>
-                        <View style={[{height: '60%'}]}>
+                        <View style={[{ height: '60%' }]}>
                             <FlatList data={cart} keyExtractor={(item) => item.id} renderItem={({ item }) => (
                                 <TouchableOpacity style={[StackHomeStyle.touch]} onPress={() => { setState(false); navigate("TTVaccine", { vaccine: item.vaccine }) }}>
                                     <View >
@@ -124,6 +125,9 @@ const StackHome = () => {
                             backgroundColor: '#007bff'
                         }, headerRight: () => <LinkGioHang cartCount={cartCount} onPress={() => setState(prev => !prev)} />
                     }} />
+                <Stack.Screen name="LichTiem" component={LichTiem}
+                    options={{ headerShown: true, headerTitle: "Lịch tiêm" }}
+                />
             </Stack.Navigator>
         </>
     )

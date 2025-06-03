@@ -9,6 +9,7 @@ import { authApis, endpoints } from "../../../config/Apis";
 // import { reloadGioHang } from "../../../global";
 
 import { CartContext } from "../../../global";
+import { useNavigation } from "@react-navigation/native";
 
 
 const TTVanccine = ({ route }) => {
@@ -16,7 +17,7 @@ const TTVanccine = ({ route }) => {
     const { loadGioHang } = useContext(CartContext);
 
     console.log(route)
-    const { vaccine} = route.params;
+    const { vaccine } = route.params;
 
 
     const [soLuong, setSoLuong] = useState(1)
@@ -25,6 +26,8 @@ const TTVanccine = ({ route }) => {
     const [show, setShow] = useState(false)
     const giam = () => { if (soLuong > 1) setSoLuong(soLuong - 1) }
     const tang = () => { setSoLuong(soLuong + 1) }
+
+    const nav = useNavigation()
 
     useEffect(() => {
         const tongTien = parseFloat(vaccine.gia) * soLuong;
@@ -127,8 +130,8 @@ const TTVanccine = ({ route }) => {
                                 <TouchableOpacity style={[TTVaccineStyle.nutGioHang]}>
                                     <Text style={[{ fontSize: 20, color: "white" }]} onPress={() => setShow(true)}>Thêm vào giỏ hàng</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[TTVaccineStyle.nutDKTiem]}>
-                                    <Text style={[{ fontSize: 20, color: "white" }]}>Đăng ký tiêm</Text>
+                                <TouchableOpacity style={[TTVaccineStyle.nutDKTiem]} onPress={() => nav.navigate("Đăng ký tiêm", { vaccine: vaccine })}>
+                                    <Text style={[{ fontSize: 20, color: "white" }]} >Đăng ký tiêm</Text>
                                 </TouchableOpacity>
                             </View>
                             <Text style={[TTVaccineStyle.text]}>Thông tin Vaccine:</Text>

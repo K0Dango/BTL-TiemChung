@@ -3,7 +3,7 @@ import { Alert, FlatList, ScrollView, Text, TouchableOpacity, View } from "react
 import { RadioButton, TextInput } from "react-native-paper"
 import Icon from 'react-native-vector-icons/FontAwesome6'
 import Apis, { authApis, endpoints } from "../../../config/Apis"
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImgPicker from 'expo-image-picker';
 
@@ -15,7 +15,12 @@ import DangKyTiemStyle from "../../../styles/DangKyTiemStyle";
 import { loadUser } from "../../../global"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-const DangKyTiem = () => {
+const DangKyTiem = ({ route }) => {
+
+    // const paramVaccine = route.params?.vaccine || null;
+    console.log("vaccine truyền ", route.params?.vaccine || null)
+    const nav = useNavigation()
+
     const [local, setLocal] = useState(1)
     const [loading, setLoading] = useState(false)
     const [pageVc, setPageVc] = useState(endpoints['vaccine'])
@@ -30,7 +35,11 @@ const DangKyTiem = () => {
 
     const [dsVaccine, setDsVc] = useState([])
     // const [soLuong, setSoLuong] = useState(1)
-    const [vaccine, setVaccine] = useState(null)
+    const [vaccine, setVaccine] = useState(route.params?.vaccine ?? null);
+    useEffect(() => {
+        setVaccine(route.params?.vaccine ?? null);
+    }, [route.params?.vaccine]);
+
     const [dsNguoiTiem, setDsNguoiTiem] = useState([])
     const [nguoiTiem, setNguoiTiem] = useState({
         name: '',
@@ -39,6 +48,11 @@ const DangKyTiem = () => {
         ngaySinh: new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
         diaChi: ''
     })
+
+
+    console.log("vaccine nhận:", vaccine);
+
+
 
     const [user, setUser] = useState({})
 
@@ -76,8 +90,11 @@ const DangKyTiem = () => {
     useFocusEffect(
         useCallback(() => {
             return () => {
-                setDsVc([]);
+                nav.setParams({ vaccine: null }); // reset vaccine về null
+
                 setVaccine(null);
+                setDsVc([]);
+                // setVaccine(null);
                 setPageVc(endpoints['vaccine']);
                 setShowDsVc(false);
                 setLocal(1);
@@ -85,7 +102,7 @@ const DangKyTiem = () => {
                 setLayUser(true);
                 setNgayTiem(new Date());
             };
-        }, [])
+        }, [nav])
     );
 
     const handleXoaNguoiTiem = (index) => {
@@ -317,12 +334,14 @@ const DangKyTiem = () => {
             });
 
             const donDangKyId = resDonDangKy.data.id;
+            console.log(resDonDangKy.data.id)
+
             console.log(ngayTiem)
 
             for (const nguoiTiemId of danhSachNguoiTiem) {
                 const resDonTiem = await authApis(token).post(endpoints['don-tiem'], {
-                    donDangKy: donDangKyId,
-                    nguoiTiem: nguoiTiemId,
+                    donDangKy_id: donDangKyId,
+                    nguoiTiem_id: nguoiTiemId,
                     vaccine: vaccine.maVaccine,
                     ngayTiem: ngayTiem.toISOString().split('T')[0],
                 });

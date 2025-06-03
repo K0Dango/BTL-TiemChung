@@ -8,6 +8,8 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from django.contrib.auth.hashers import check_password
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from rest_framework.pagination import PageNumberPagination
+from django.utils import timezone
+
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -161,16 +163,31 @@ class NguoiTiemViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class DonTiemViewSet(viewsets.ModelViewSet):  # Trước là DonDangKyViewSet
+class DonTiemViewSet(viewsets.ModelViewSet):
     queryset = DonTiem.objects.all()
     serializer_class = DonTiemSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
-        return DonTiem.objects.filter(nguoiDangKy=self.request.user).prefetch_related('don_tiem__nguoiTiem', 'vaccine')
+        return DonTiem.objects.filter(donDangKy__nguoiDangKy=self.request.user).select_related('nguoiTiem', 'donDangKy', 'donDangKy__vaccine')
+    
+    @action(detail=False, methods=["GET"], url_path='lichTiem', permission_classes=[IsAuthenticated])
+    def lichTiem(self, request):
+        user = request.user
+        today = timezone.now().date()
+        don_tiem_qs = DonTiem.objects.filter(
+            donDangKy__nguoiDangKy=user,
+            ngayTiem__gte=today,
+            trangThai=1
+        ).select_related('nguoiTiem', 'donDangKy', 'donDangKy__vaccine')
+
+        serializer = self.get_serializer(don_tiem_qs, many=True)
+        return Response(serializer.data)
+
+
         
 
-class DonDangKyViewSet(viewsets.ModelViewSet):  # Trước là DonTiemViewSet
+class DonDangKyViewSet(viewsets.ModelViewSet):
     queryset = DonDangKy.objects.all()
     serializer_class = DonDangKySerializer
     permission_classes = [IsAuthenticated]

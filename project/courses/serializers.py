@@ -65,16 +65,12 @@ class NguoiTiemSerializer(ModelSerializer):
     class Meta:
         model = NguoiTiem
         fields = '__all__'
-        read_only_fields = ['nguoiTao']  # ✅ Thêm dòng này
+        read_only_fields = ['nguoiTao']  
 
 
-class DonTiemSerializer(ModelSerializer):  # Trước là DonDangKySerializer, giờ là DonTiemSerializer
-    class Meta:
-        model = DonTiem
-        fields = '__all__'
 
 
-class DonDangKySerializer(ModelSerializer):  # Trước là DonTiemSerializer, giờ là DonDangKySerializer
+class DonDangKySerializer(ModelSerializer):  
     nguoiDangKy = UserSerializer(read_only=True)
     nguoiDangKy_id = PrimaryKeyRelatedField(
         queryset=User.objects.all(),
@@ -85,14 +81,31 @@ class DonDangKySerializer(ModelSerializer):  # Trước là DonTiemSerializer, g
         queryset=Vaccine.objects.all(),
         source='vaccine',
     ) 
-    don_tiem = DonTiemSerializer(many=True, read_only=True)  # Đây là related_name mới của DonTiem -> DonDangKy
     tong_tien = DecimalField(max_digits=10, decimal_places=2, read_only=True)
 
     class Meta:
         model = DonDangKy
-        fields = ('id', 'nguoiDangKy', 'nguoiDangKy_id', 'vaccine', 'vaccine_id', 'ngayDangKy','don_tiem', 'tong_tien')
+        fields = ('id', 'nguoiDangKy', 'nguoiDangKy_id', 'vaccine', 'vaccine_id', 'ngayDangKy', 'tong_tien')
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         ret['tong_tien'] = instance.tong_tien
         return ret
+
+class DonTiemSerializer(ModelSerializer):  
+    nguoiTiem = NguoiTiemSerializer(read_only=True)
+    nguoiTiem_id = PrimaryKeyRelatedField(
+        queryset=NguoiTiem.objects.all(),
+        source='nguoiTiem',
+        write_only=True
+    )
+    donDangKy = DonDangKySerializer(read_only=True)  # <-- nested
+    donDangKy_id = PrimaryKeyRelatedField(
+        queryset=DonDangKy.objects.all(),
+        source='donDangKy',
+        write_only=True
+    )
+
+    class Meta:
+        model = DonTiem
+        fields = ('id', 'nguoiTiem','nguoiTiem_id', 'donDangKy', 'donDangKy_id', 'ngayTiem', 'trangThai')
