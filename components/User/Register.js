@@ -111,11 +111,18 @@ const Register = () => {
 
 
     const checkInf = async () => {
+        setUser(prev => ({
+            ...prev,
+            name: prev.name.trim()
+        }));
+        const regex = /^[\p{L}\s]+$/u;
         const emailRegex = /^[a-zA-Z0-9]+@gmail\.com$/;
         const phoneRegex = /^0/;
         let setError = {};
-        if (!user.name)
+        if (!user.name.trim())
             setError.name = "Vui lòng nhập họ và tên";
+        else if (!regex.test(user.name))
+            setError.name = "Tên ko được có ký tự đặc biệt";
         if (user.email) {
             if (!emailRegex.test(user.email)) {
                 setError.email = "Email phải là @gmail.com và không chứa ký tự đặc biệt";
@@ -181,7 +188,7 @@ const Register = () => {
 
     return (
 
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
+        <ScrollView style={{ flex: 1, marginBottom: 40 }} contentContainerStyle={{ padding: 16 }}>
             <View style={MyStyles.container}>
                 {loading && (
                     <View style={{
@@ -197,7 +204,7 @@ const Register = () => {
                 <Text style={[MyStyles.text_center, { backgroundColor: 'brown' }]}>ĐĂNG KÝ TÀI KHOẢN</Text>
                 <View style={MyStyles.kc}>
                     <View>
-                        <TextInput label='Họ và tên' value={user.name} onChangeText={t => setState(t, 'name')} error={!!errors.name} mode="outlined" />
+                        <TextInput label='Họ và tên' value={user.name} onChangeText={t => setState(t, 'name')} error={!!errors.name} mode="outlined" autoCapitalize="words" />
                         {errors.name && <Text style={{ color: 'red' }}>{errors.name}</Text>}
                     </View>
                     <View style={MyStyles.kc}>

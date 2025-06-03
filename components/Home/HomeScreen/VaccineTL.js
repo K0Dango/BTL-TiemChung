@@ -41,7 +41,7 @@ const VaccineTL = ({ route }) => {
     return (
         <View style={[VaccineLoaiStyle.container]}>
             <FlatList data={vaccine} keyExtractor={(item) => item.maVaccine} renderItem={({ item }) => (
-                <TouchableOpacity style={[VaccineLoaiStyle.item]} onPress={() => { nav.navigate("TTVaccine", { vaccine: item }) }}>
+                <TouchableOpacity style={[VaccineLoaiStyle.item]} onPress={() => { nav.navigate("TTVaccine", { vaccine: item}) }}>
                     <View style={[VaccineLoaiStyle.inf]}>
 
                         <Text style={[VaccineLoaiStyle.text, {}]}>Tên: {item.tenVc}</Text>

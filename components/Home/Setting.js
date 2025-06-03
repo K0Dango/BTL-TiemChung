@@ -58,7 +58,7 @@ const Login = () => {
     };
 
     return (
-        <View style={{ height: `${100}%` }}>
+        <View style={{ flex: 1 }}>
             <View style={SettingStyle.header}>
                 <View style={SettingStyle.userInfo}>
                     <View style={[{ width: '30%', height: `100%`, aspectRatio: 1, }]}>
@@ -70,16 +70,16 @@ const Login = () => {
                     </View>
 
                 </View>
-                <View style={{ alignItems: "center" }}>
+                {/* <View style={{ alignItems: "center" }}>
                     <TouchableOpacity style={HeaderStyle.notificationIcon}>
-                        <Icon1 name="notifications" size={30} color="white" />
+                        <Icon1 name="notifications" size={35} color="white" />
                         {notifications > 0 && (
                             <View style={HeaderStyle.notificationBadge}>
                                 <Text style={HeaderStyle.notificationText}>{notifications}</Text>
                             </View>
                         )}
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
             <ScrollView>
                 <View>

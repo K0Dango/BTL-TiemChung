@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, LoaiVaccine, Vaccine, GioHang
+from .models import User, LoaiVaccine, Vaccine, GioHang, NguoiTiem, DonDangKy,DonTiem
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'email','password', 'sdt', 'gioiTinh', 'ngaySinh', 'diaChi', 'avatar', 'role']
@@ -50,10 +50,37 @@ class GioHangAdmin(admin.ModelAdmin):
     def get_vaccine_name(self, obj):
         return obj.vaccine.tenVc
     get_vaccine_name.short_description = 'Tên Vaccine'
+
+
+class NguoiTiemAdmin(admin.ModelAdmin):
+    list_display = ('name', 'gioiTinh', 'ngaySinh', 'sdt', 'nguoiTao')
+    search_fields = ('name', 'sdt', 'diaChi')
+    list_filter = ('gioiTinh',)
+
+class DonDangKyAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nguoiDangKy', 'vaccine', 'ngayDangKy', 'tong_tien')
+    list_filter = ('ngayDangKy', 'vaccine')
+    search_fields = ('nguoiDangKy__username',)  # Tìm theo username người đăng ký
+    readonly_fields = ('tong_tien',)
+
+    def get_nguoiDangKy(self, obj):
+        return obj.nguoiDangKy.username  # Hoặc obj.nguoiDangKy.get_full_name()
+    get_nguoiDangKy.short_description = 'Người đăng ký'
+
+    def tong_tien(self, obj):
+        return obj.tong_tien
+
+class DonTiemAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nguoiTiem', 'donDangKy', 'ngayTiem', 'trangThai')
+    list_filter = ('trangThai',)
+    search_fields = ('nguoiTiem__name',)
     
 
 admin.site.register(User, UserAdmin)
 admin.site.register(LoaiVaccine, LoaiVcAdmin)
 admin.site.register(Vaccine, VaccineAdmin)
 admin.site.register(GioHang, GioHangAdmin)
+admin.site.register(NguoiTiem, NguoiTiemAdmin)
+admin.site.register(DonDangKy, DonDangKyAdmin)
+admin.site.register(DonTiem, DonTiemAdmin)
 # Register your models here.

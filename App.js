@@ -2,10 +2,12 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { navigationRef } from './navigator/Navigation'
 
 import Register from './components/User/Register';
 import Login from './components/User/Login';
 import Main from './Main'
+import { CartProvider } from './global';
 
 
 
@@ -16,7 +18,7 @@ const Stack = createStackNavigator();
 
 const App = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Register"
@@ -30,8 +32,12 @@ const App = () => {
         />
         <Stack.Screen
           name="Main"
-          component={Main}
           options={{ headerShown: false }}
+          children={() => (
+            <CartProvider>
+              <Main />
+            </CartProvider>
+          )}
         />
       </Stack.Navigator>
     </NavigationContainer>

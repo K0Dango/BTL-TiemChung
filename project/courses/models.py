@@ -2,6 +2,8 @@ from django.db import models
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.utils import timezone
+
 import cloudinary
 
 cloudinary.config( 
@@ -92,7 +94,56 @@ class Vaccine(models.Model):
 class GioHang(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='gio_hang')
     vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE, related_name='gio_hang')
-    soLuong = models.IntegerField(default='1')
-
+    soLuong = models.IntegerField(default=1)
+    
     def __str__(self):
         return str(self.id)
+    
+
+class NguoiTiem(models.Model):
+    GENDER_CHOICES = [
+        ('NAM', 'NAM'),
+        ('NỮ', 'NỮ'),
+        ('KHÁC', 'KHÁC'),
+    ]
+    name = models.CharField(max_length=100)
+    ngaySinh = models.DateField()
+    gioiTinh = models.CharField(max_length=5,  choices=GENDER_CHOICES, default="NAM")
+    nguoiTao = models.ForeignKey(User, on_delete=models.CASCADE, related_name='nguoi_tiem')
+    sdt = models.CharField(max_length=10)
+    diaChi = models.TextField()   
+
+
+    def __str__(self):
+        return self.name
+
+
+
+class DonDangKy(models.Model):  # Đổi từ DonTiem thành DonDangKy
+    nguoiDangKy = models.ForeignKey(User, on_delete=models.CASCADE, related_name='don_dang_ky')
+    ngayDangKy = models.DateField(auto_now_add=True)
+    vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE)
+
+    def __str__(self):
+         return str(self.id)
+
+    @property
+    def tong_tien(self):
+        so_nguoi = self.don_tiem.count()
+        return self.vaccine.gia * so_nguoi
+
+
+class DonTiem(models.Model):  # Đổi từ DonDangKy thành DonTiem
+    TRANG_THAI = [
+        (1, 'Chưa tiêm'),
+        (2, 'Đã tiêm'),
+        (3, 'Đã hủy')
+    ]
+
+    nguoiTiem = models.ForeignKey(NguoiTiem, on_delete=models.CASCADE, related_name='don_tiem')
+    donDangKy = models.ForeignKey(DonDangKy, on_delete=models.CASCADE, related_name='don_tiem')
+    ngayTiem = models.DateField()
+    trangThai = models.IntegerField( choices=TRANG_THAI, default=1)
+
+    def __str__(self):
+         return str(self.id)

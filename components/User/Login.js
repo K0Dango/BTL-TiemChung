@@ -39,7 +39,6 @@ const Login = () => {
 
 
     const checkAc = async () => {
-        console.log("3")
         const emailRegex = /^[a-zA-Z0-9]+@gmail\.com$/;
         const setError = {};
         if (account.email) {
@@ -50,7 +49,6 @@ const Login = () => {
             setError.email = 'Vui lòng nhập vào email'
         if (!account.mk)
             setError.mk = 'Vui lòng nhập Password'
-        console.log()
 
         if (Object.keys(setError).length > 0)
             setErrors(setError);

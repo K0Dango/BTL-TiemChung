@@ -39,6 +39,6 @@ export default StyleSheet.create({
         fontSize: 12,
         fontWeight: 'bold',
     }, notificationIcon: {
-        right: -5,
+        right: 0,
     }
 })

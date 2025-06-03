@@ -1,5 +1,5 @@
-from rest_framework.serializers import ModelSerializer, CharField, ImageField, ValidationError, PrimaryKeyRelatedField
-from .models import User, LoaiVaccine, Vaccine, GioHang
+from rest_framework.serializers import ModelSerializer, CharField, ImageField, ValidationError, PrimaryKeyRelatedField, SerializerMethodField, DecimalField
+from .models import User, LoaiVaccine, Vaccine, GioHang, DonTiem, DonDangKy, NguoiTiem
 from django.contrib.auth.hashers import make_password
 
 
@@ -40,6 +40,7 @@ class VaccineSerializer(ModelSerializer):
 
 
 class GioHangSerializer(ModelSerializer):
+    vaccine = VaccineSerializer(read_only=True)
     user_id = PrimaryKeyRelatedField(
         queryset=User.objects.all(),
         source='user',
@@ -50,25 +51,48 @@ class GioHangSerializer(ModelSerializer):
     ) 
     tenVaccine = CharField(source='vaccine.tenVc', read_only=True) 
     emailUser = CharField(source='user.email', read_only=True)
+    thanhTien = SerializerMethodField()
 
     class Meta:
         model = GioHang
-        fields = ('id', 'user_id', 'emailUser','vaccine_id', 'tenVaccine', 'soLuong')
+        fields = ('id', 'user_id', 'emailUser','vaccine','vaccine_id', 'tenVaccine', 'soLuong', 'thanhTien')
+
+    def get_thanhTien(self, obj):
+        return obj.soLuong * obj.vaccine.gia
     
-    # def create(self, validated_data):
-    #     user = validated_data['user']
-    #     vaccine = validated_data['vaccine']
-    #     so_luong_moi = validated_data.get('soLuong', 1)
 
-    #     gio_hang, created = GioHang.objects.get_or_create(
-    #         user=user,
-    #         vaccine=vaccine,
-    #         defaults={'soLuong': so_luong_moi}
-    #     )
+class NguoiTiemSerializer(ModelSerializer):
+    class Meta:
+        model = NguoiTiem
+        fields = '__all__'
+        read_only_fields = ['nguoiTao']  # ✅ Thêm dòng này
 
-    #     if not created:
-    #         gio_hang.soLuong += so_luong_moi
-    #         gio_hang.save()
 
-    #     return gio_hang
+class DonTiemSerializer(ModelSerializer):  # Trước là DonDangKySerializer, giờ là DonTiemSerializer
+    class Meta:
+        model = DonTiem
+        fields = '__all__'
 
+
+class DonDangKySerializer(ModelSerializer):  # Trước là DonTiemSerializer, giờ là DonDangKySerializer
+    nguoiDangKy = UserSerializer(read_only=True)
+    nguoiDangKy_id = PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        source='nguoiDangKy',
+    ) 
+    vaccine = VaccineSerializer(read_only=True)
+    vaccine_id = PrimaryKeyRelatedField(
+        queryset=Vaccine.objects.all(),
+        source='vaccine',
+    ) 
+    don_tiem = DonTiemSerializer(many=True, read_only=True)  # Đây là related_name mới của DonTiem -> DonDangKy
+    tong_tien = DecimalField(max_digits=10, decimal_places=2, read_only=True)
+
+    class Meta:
+        model = DonDangKy
+        fields = ('id', 'nguoiDangKy', 'nguoiDangKy_id', 'vaccine', 'vaccine_id', 'ngayDangKy','don_tiem', 'tong_tien')
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['tong_tien'] = instance.tong_tien
+        return ret

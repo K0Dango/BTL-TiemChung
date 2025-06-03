@@ -4,8 +4,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { View, Text } from "react-native";
 
 
-import StackHome from './navigator/StackHome';
-import DangKyTiem from './components/Home/DangKyTiem';
+import Home from './navigator/StackHome';
+import DangKyTiem from './components/Home/HomeScreen/DangKyTiem';
 import ScreenSetting from "./navigator/ScreenSetting";
 import { TouchableOpacity } from "react-native";
 import MyStyles from "./styles/MyStyles";
@@ -28,15 +28,15 @@ const CustomButton = ({ onPress }) => {
 const Main = () => {
 
     return (
-        <Tab.Navigator initialRouteName="StackHome" screenOptions={{ headerShown: false, tabBarActiveTintColor: '#fff', tabBarInactiveTintColor: '#fff', tabBarStyle: { backgroundColor: 'blue' } }}>
-            <Tab.Screen name="StackHome" component={StackHome} options={{
+        <Tab.Navigator initialRouteName="Home" screenOptions={{ headerShown: false, tabBarActiveTintColor: '#fff', tabBarInactiveTintColor: '#fff', tabBarStyle: { backgroundColor: 'blue' } }}>
+            <Tab.Screen name="Home" component={Home} options={{
                 tabBarIcon: ({ color }) => <Icon name="home" color={color} size={28} />
             }}
                 listeners={({ navigation }) => ({
                     tabPress: e => {
                         e.preventDefault();
-                        navigation.navigate('StackHome', {
-                            screen: 'Home',
+                        navigation.navigate('Home', {
+                            screen: 'MainHome',
                         });
                     },
                 })
