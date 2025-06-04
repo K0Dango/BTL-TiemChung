@@ -9,6 +9,10 @@ from django.contrib.auth.hashers import check_password
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from rest_framework.pagination import PageNumberPagination
 from django.utils import timezone
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+from io import BytesIO
+from .models import DonTiem
 
 
 
@@ -183,6 +187,67 @@ class DonTiemViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(don_tiem_qs, many=True)
         return Response(serializer.data)
+    
+    @action(detail=True, methods=['post'], url_path='huy-tiem', permission_classes=[IsAuthenticated])
+    def huy_tiem(self, request, pk=None):
+        don_tiem = self.get_object()
+
+        if don_tiem.donDangKy.nguoiDangKy != request.user:
+            return Response({'detail': 'Không có quyền hủy lịch tiêm này'}, status=status.HTTP_403_FORBIDDEN)
+
+        if don_tiem.trangThai != 1:
+            return Response({'detail': 'Chỉ có thể hủy lịch tiêm chưa được tiêm'}, status=status.HTTP_400_BAD_REQUEST)
+
+        don_tiem.trangThai = 3 
+        don_tiem.save()
+
+        serializer = self.get_serializer(don_tiem)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["GET"], url_path='lichSuTiem', permission_classes=[IsAuthenticated])
+    def lich_su_tiem(self, request):
+        user = request.user
+        don_tiem_qs = DonTiem.objects.filter(
+            donDangKy__nguoiDangKy=user,
+            trangThai__in=[2, 3]
+        ).select_related('nguoiTiem', 'donDangKy', 'donDangKy__vaccine')
+
+        serializer = self.get_serializer(don_tiem_qs, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['get'], url_path='giay-chung-nhan')
+    def giay_chung_nhan(self, request, pk=None):
+        don_tiem = self.get_object()
+
+        if don_tiem.donDangKy.nguoiDangKy != request.user:
+            return Response({'detail': 'Không có quyền truy cập'}, status=status.HTTP_403_FORBIDDEN)
+
+        buffer = BytesIO()
+        p = canvas.Canvas(buffer)
+
+        p.setFont("Helvetica-Bold", 16)
+        p.drawString(100, 800, "GIẤY CHỨNG NHẬN TIÊM VACCINE")
+
+        p.setFont("Helvetica", 12)
+        p.drawString(100, 760, f"Họ tên người tiêm: {don_tiem.nguoiTiem.name}")
+        p.drawString(100, 740, f"Ngày sinh: {don_tiem.nguoiTiem.ngaySinh}")
+        p.drawString(100, 720, f"Giới tính: {don_tiem.nguoiTiem.gioiTinh}")
+        p.drawString(100, 700, f"Số điện thoại: {don_tiem.nguoiTiem.sdt}")
+        p.drawString(100, 680, f"Địa chỉ: {don_tiem.nguoiTiem.diaChi}")
+
+        p.drawString(100, 640, f"Tên vaccine: {don_tiem.donDangKy.vaccine.tenVc}")
+        p.drawString(100, 620, f"Loại vaccine: {don_tiem.donDangKy.vaccine.loaiVaccine.tenLoai}")
+        p.drawString(100, 600, f"Ngày tiêm: {don_tiem.ngayTiem.strftime('%d/%m/%Y')}")
+        p.drawString(100, 580, f"Trạng thái: {'Đã tiêm' if don_tiem.trangThai == 2 else 'Hủy tiêm'}")
+
+        p.showPage()
+        p.save()
+
+        buffer.seek(0)
+        response = HttpResponse(buffer, content_type='application/pdf')
+        filename = f"Giay_chung_nhan_{don_tiem.id}.pdf"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
 
 
         

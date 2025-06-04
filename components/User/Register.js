@@ -269,10 +269,6 @@ const Register = () => {
                     </View>
                     <Button style={{ backgroundColor: 'red', marginTop: 20 }} disabled={loading} loading={loading} onPress={() => checkInf()}>Đăng ký
                     </Button>
-                    <View style={[MyStyles.kc]}>
-                        <Text style={{ textAlign: "center", fontSize: 16 }}>Hoặc đăng ký bằng</Text>
-                    </View>
-
                 </View>
             </View>
         </ScrollView>

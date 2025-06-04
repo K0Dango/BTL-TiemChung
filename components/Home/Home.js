@@ -21,7 +21,7 @@ const Home = () => {
 
     const navigation = useNavigation();
 
-    
+
 
     const linkLichSu = () => {
         navigation.navigate("LichSu");
@@ -40,6 +40,10 @@ const Home = () => {
 
     const linkLichTiem = () => {
         navigation.navigate("LichTiem")
+    }
+
+    const linkLichSuTiem = () => {
+        navigation.navigate("LichSuTiem")
     }
 
     const [user, setUserData] = useState({});
@@ -67,7 +71,7 @@ const Home = () => {
                         <Text style={{ fontSize: 19 }}>{user.name} </Text>
                     </View>
                 </View>
-                <View style={{ alignItems: "center" }}>
+                {/* <View style={{ alignItems: "center" }}>
                     <TouchableOpacity style={HeaderStyle.notificationIcon}>
                         <Icon1 name="notifications" size={30} color="white" />
                         {notifications > 0 && (
@@ -76,7 +80,7 @@ const Home = () => {
                             </View>
                         )}
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
             <ScrollView>
                 <View style={HomeStyle.viewItem}>
@@ -98,24 +102,24 @@ const Home = () => {
                             <Text style={HomeStyle.textItem}>Lịch tiêm</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={HomeStyle.Touch}>
+                    {/* <TouchableOpacity style={HomeStyle.Touch}>
                         <View style={HomeStyle.item}>
                             <Icon1 name="file-download" size={60} color="blue" />
                             <Text style={HomeStyle.textItem}>Tải giấy chứng nhận</Text>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={HomeStyle.Touch} onPress={() => linkLichSu()}>
+                    </TouchableOpacity> */}
+                    <TouchableOpacity style={HomeStyle.Touch} onPress={() => linkLichSuTiem()}>
                         <View style={HomeStyle.item}>
                             <Icon1 name="contacts" size={60} color="blue" />
                             <Text style={HomeStyle.textItem}>Lịch sử tiêm</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={HomeStyle.Touch} onPress={() => linkLienHe()}>
+                    {/* <TouchableOpacity style={HomeStyle.Touch} onPress={() => linkLienHe()}>
                         <View style={HomeStyle.item}>
                             <Icon1 name="contacts" size={60} color="blue" />
                             <Text style={HomeStyle.textItem}>Liện hệ</Text>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </ScrollView>
         </View>

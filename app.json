@@ -19,10 +19,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.mobileapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     }
+  },
+  "android": {
+    "permissions": [
+      "READ_EXTERNAL_STORAGE",
+      "WRITE_EXTERNAL_STORAGE",
+      "MEDIA_LIBRARY"
+    ]
   }
 }

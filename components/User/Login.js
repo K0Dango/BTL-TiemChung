@@ -130,9 +130,6 @@ const Login = () => {
                 <Button style={{ marginTop: 30, backgroundColor: 'red' }} disabled={loading} loading={loading} onPress={() => checkAc()}>Đăng nhập</Button>
 
                 <View style={[MyStyles.kc]}>
-                    <Text style={{ textAlign: "center", fontSize: 16 }}>Đăng nhập bằng</Text>
-                </View>
-                <View style={[MyStyles.kc]}>
                     <Text style={{ textAlign: "center", fontSize: 20, textDecorationLine: "underline", color: "blue" }} onPress={() => linkDK()}>Đăng ký</Text>
                 </View>
             </View>

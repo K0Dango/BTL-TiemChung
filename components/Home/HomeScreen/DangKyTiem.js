@@ -14,6 +14,7 @@ import VaccineLoaiStyle from "../../../styles/VaccineLoaiStyle"
 import DangKyTiemStyle from "../../../styles/DangKyTiemStyle";
 import { loadUser } from "../../../global"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { CartContext } from "../../../global"
 
 const DangKyTiem = ({ route }) => {
 
@@ -65,7 +66,7 @@ const DangKyTiem = ({ route }) => {
             setPageVc(res.data.next)
         } catch (error) {
             console.error(error)
-            Alert('Lỗi load dữ liệu')
+            Alert.alert('Lỗi load dữ liệu')
         } finally {
             setLoading(false)
         }
@@ -140,9 +141,7 @@ const DangKyTiem = ({ route }) => {
 
                         </>
                     )}
-                    <TouchableOpacity style={[DangKyTiemStyle.buttonVc]}>
-                        <Text style={[{ textAlign: "center", fontSize: 18 }]}>Chọn từ giỏ hàng</Text>
-                    </TouchableOpacity>
+
                 </View>
 
 
@@ -389,7 +388,6 @@ const DangKyTiem = ({ route }) => {
             <View style={{ padding: 10 }}>
                 <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 10 }}>Thông tin đăng ký</Text>
 
-                {/* Vaccine đã chọn */}
                 <View style={{ marginBottom: 15 }}>
                     <Text style={{ fontSize: 18 }}>Vaccine: {vaccine.tenVc}</Text>
                     <Text style={{ fontSize: 18 }}>Loại: {vaccine.loaiVaccine.tenLoai}</Text>
@@ -397,7 +395,6 @@ const DangKyTiem = ({ route }) => {
                     <Text style={{ fontSize: 18 }}>Giá: {vaccine.gia} đ</Text>
                 </View>
 
-                {/* Danh sách người tiêm */}
                 <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 5 }}> Người tiêm ({dsNguoiTiem.length}):</Text>
                 {dsNguoiTiem.map((nguoi, index) => (
                     <View key={index} style={{ marginBottom: 10, borderBottomWidth: 1, paddingBottom: 5 }}>
