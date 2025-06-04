@@ -68,7 +68,7 @@ const StackHome = () => {
 
         setSelectedItems([]);
         setState(false);
-        await loadGioHang(true); // reload sau khi xóa
+        await loadGioHang(true); 
     };
 
     return (

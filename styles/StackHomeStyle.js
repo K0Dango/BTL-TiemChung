@@ -25,7 +25,7 @@ export default StyleSheet.create({
     },
     backGrGioHang: {
         position: 'absolute',
-        top: 90,  // Tuỳ chỉnh tuỳ vị trí header
+        top: 90,  
         right: 10,
         backgroundColor: '#cdcdcd',
         padding: 10,

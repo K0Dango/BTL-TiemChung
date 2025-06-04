@@ -99,7 +99,6 @@ const LichSuTiem = () => {
                 />
             )}
 
-            {/* Modal hiển thị chi tiết */}
             <Modal visible={selectedItem !== null} transparent animationType="slide">
                 <View style={styles.modalBackground}>
                     <View style={styles.modalContainer}>

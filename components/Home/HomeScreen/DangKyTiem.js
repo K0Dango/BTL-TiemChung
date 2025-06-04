@@ -91,11 +91,10 @@ const DangKyTiem = ({ route }) => {
     useFocusEffect(
         useCallback(() => {
             return () => {
-                nav.setParams({ vaccine: null }); // reset vaccine về null
+                nav.setParams({ vaccine: null }); 
 
                 setVaccine(null);
                 setDsVc([]);
-                // setVaccine(null);
                 setPageVc(endpoints['vaccine']);
                 setShowDsVc(false);
                 setLocal(1);
@@ -225,7 +224,6 @@ const DangKyTiem = ({ route }) => {
                             name: prev.name.trim(),
                             diaChi: prev.diaChi.trim()
                         }));
-                        // Kiểm tra dữ liệu hợp lệ
                         if (
                             nguoiTiem.name === '' ||
                             nguoiTiem.diaChi === '' ||
@@ -368,7 +366,7 @@ const DangKyTiem = ({ route }) => {
 
         const allHopLe = dsNguoiTiem.every((nguoi) => {
             const tuoi = new Date().getFullYear() - new Date(nguoi.ngaySinh).getFullYear();
-            return tuoi >= vaccine.loaiVaccine.tuoi;  // tuổi phải >= tuổi tối thiểu của vaccine
+            return tuoi >= vaccine.loaiVaccine.tuoi; 
         });
         setHopLe(allHopLe);
     }, [vaccine, dsNguoiTiem]);
@@ -404,7 +402,6 @@ const DangKyTiem = ({ route }) => {
                     </View>
                 ))}
 
-                {/* Tổng tiền */}
                 <View style={{ marginTop: 20 }}>
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Tổng tiền: {tongTien.toLocaleString()} đ</Text>
                 </View>
@@ -464,10 +461,8 @@ const DangKyTiem = ({ route }) => {
             </View>
             {showDsVc && (
                 <>
-                    {/* Overlay */}
                     <TouchableOpacity style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 998 }} onPress={() => setShowDsVc(false)} />
 
-                    {/* Danh sách vaccine */}
                     <View style={{ position: 'absolute', top: 100, left: 0, right: 0, bottom: 0, height: 500, backgroundColor: "#cdcdcdc7", zIndex: 999 }}>
                         <TouchableOpacity onPress={() => setShowDsVc(false)} style={{ alignSelf: 'flex-end', padding: 10 }}>
                             <Icon name="xmark" size={20} />

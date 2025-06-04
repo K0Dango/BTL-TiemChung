@@ -19,7 +19,7 @@ export default StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "grey",
-        borderRadius: 15, // phải là một nửa của width/height
+        borderRadius: 15, 
     },
     input: {
         marginVertical: 10,

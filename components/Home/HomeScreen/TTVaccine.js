@@ -69,7 +69,7 @@ const TTVanccine = ({ route }) => {
                     </View>
                     <View style={[{
                         position: 'absolute',
-                        top: 90,  // Tuỳ chỉnh tuỳ vị trí header
+                        top: 90,
                         right: 10,
                         backgroundColor: '#cdcdcd',
                         padding: 10,
@@ -114,12 +114,6 @@ const TTVanccine = ({ route }) => {
             <View style={[TTVaccineStyle.container]}>
                 <ScrollView>
                     <View >
-                        <View style={[TTVaccineStyle.image]}>
-                            <Image
-                                source={{ uri: 'https://5.imimg.com/data5/SELLER/Default/2024/2/391176852/KQ/ER/ZC/24119759/cervarix-500x500.jpg' }}
-                                style={{ width: 100, height: 100 }}
-                            />
-                        </View>
                         <Text style={[TTVaccineStyle.text]}>Tên Vaccine: {vaccine.tenVc}</Text>
                         <Text style={[TTVaccineStyle.text]}>Loại Vaccine: {vaccine.loaiVaccine.tenLoai}</Text>
                         <Text style={[TTVaccineStyle.text]}>Số mũi cần tiêm: {vaccine.loaiVaccine.soMui}</Text>

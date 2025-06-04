@@ -32,7 +32,6 @@ class GioHangAdmin(admin.ModelAdmin):
     list_filter = ['user', 'vaccine']
     search_fields = ['user__email', 'vaccine__tenVc']
 
-    # Chỉ cho phép chọn user và vaccine khi add
     fields = ['user', 'vaccine', 'soLuong']
 
     def get_user_id(self, obj):
@@ -60,11 +59,11 @@ class NguoiTiemAdmin(admin.ModelAdmin):
 class DonDangKyAdmin(admin.ModelAdmin):
     list_display = ('id', 'nguoiDangKy', 'vaccine', 'ngayDangKy', 'tong_tien')
     list_filter = ('ngayDangKy', 'vaccine')
-    search_fields = ('nguoiDangKy__username',)  # Tìm theo username người đăng ký
+    search_fields = ('nguoiDangKy__username',) 
     readonly_fields = ('tong_tien',)
 
     def get_nguoiDangKy(self, obj):
-        return obj.nguoiDangKy.username  # Hoặc obj.nguoiDangKy.get_full_name()
+        return obj.nguoiDangKy.username  
     get_nguoiDangKy.short_description = 'Người đăng ký'
 
     def tong_tien(self, obj):
@@ -83,4 +82,3 @@ admin.site.register(GioHang, GioHangAdmin)
 admin.site.register(NguoiTiem, NguoiTiemAdmin)
 admin.site.register(DonDangKy, DonDangKyAdmin)
 admin.site.register(DonTiem, DonTiemAdmin)
-# Register your models here.

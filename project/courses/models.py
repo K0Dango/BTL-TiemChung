@@ -119,7 +119,7 @@ class NguoiTiem(models.Model):
 
 
 
-class DonDangKy(models.Model):  # Đổi từ DonTiem thành DonDangKy
+class DonDangKy(models.Model):  
     nguoiDangKy = models.ForeignKey(User, on_delete=models.CASCADE, related_name='don_dang_ky')
     ngayDangKy = models.DateField(auto_now_add=True)
     vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE)
@@ -133,7 +133,7 @@ class DonDangKy(models.Model):  # Đổi từ DonTiem thành DonDangKy
         return self.vaccine.gia * so_nguoi
 
 
-class DonTiem(models.Model):  # Đổi từ DonDangKy thành DonTiem
+class DonTiem(models.Model):  
     TRANG_THAI = [
         (1, 'Chưa tiêm'),
         (2, 'Đã tiêm'),

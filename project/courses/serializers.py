@@ -99,7 +99,7 @@ class DonTiemSerializer(ModelSerializer):
         source='nguoiTiem',
         write_only=True
     )
-    donDangKy = DonDangKySerializer(read_only=True)  # <-- nested
+    donDangKy = DonDangKySerializer(read_only=True) 
     donDangKy_id = PrimaryKeyRelatedField(
         queryset=DonDangKy.objects.all(),
         source='donDangKy',

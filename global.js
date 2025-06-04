@@ -37,7 +37,7 @@ export const CartContext = createContext();
 export const CartProvider = ({ children }) => {
     const [cart, setCart] = useState([]);
     const [cartCount, setCartCount] = useState(0);
-    const [selectedItems, setSelectedItems] = useState([]); // lưu id các item được chọn
+    const [selectedItems, setSelectedItems] = useState([]); 
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(endpoints['gio-hang']);
 
@@ -51,7 +51,7 @@ export const CartProvider = ({ children }) => {
 
             if (reset) {
                 setCart(res.data.results);
-                setSelectedItems([]); // reset chọn khi load mới
+                setSelectedItems([]); 
             } else {
                 setCart(prev => [...prev, ...res.data.results]);
             }
@@ -74,7 +74,6 @@ export const CartProvider = ({ children }) => {
         }
     };
 
-    // Chọn hoặc bỏ chọn item giỏ hàng
     const toggleSelectItem = (id) => {
         setSelectedItems(prev =>
             prev.includes(id) ? prev.filter(itemId => itemId !== id) : [...prev, id]
